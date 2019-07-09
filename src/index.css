@@ -1,13 +1,114 @@
+@import-normalize; /* bring in normalize.css styles */
+
+*,
+*:before,
+*:after {
+  margin:0;
+  padding:0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none !important;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+html,
 body {
-  margin: 0;
+  height:100%;
+}
+
+body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-size: 100%;
+  font-weight: normal;
+  line-height: 1.625;
+  color: #333333;
+  background-color: rgba(0,0,0,.025);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.1; 
+}
+h1 + *,
+h2 + *,
+h3 + *,
+h4 + *,
+h5 + *,
+h6 + * {
+  margin-top: 0.8125em; 
+}
+
+h1 {
+  font-size: 2.625em; 
+}
+h2 {
+  font-size: 1.625em; 
+}
+h3 {
+  font-size: 1.25em; 
+}
+h4,
+h5 {
+  font-size: 1em; 
+}
+h6 {
+  font-size: 0.8125em; 
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+ul[class*="listing"],
+ol[class*="listing"] {
+  list-style: none;
+  margin-top: 0; 
+}
+ul[class*="listing"] li,
+ol[class*="listing"] li {
+  position: relative; 
+}
+
+ul[class*="listing"] li {
+  padding-left: 1.25em; 
+}
+ul[class*="listing"] li:before {
+  content: '\2022';
+  position: absolute;
+  left: 0.4375em; 
+}
+
+ol[class*="listing"] {
+  counter-reset: num-list; 
+}
+ol[class*="listing"] li {
+  padding-left: 2em; 
+}
+ol[class*="listing"] li:before {
+  counter-increment: num-list;
+  content: counter(num-list) ".";
+  position: absolute;
+  left: 0;
+  width: 1.625em;
+  text-align: right; 
 }
