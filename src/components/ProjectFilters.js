@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components/macro";
-import { ProjectContext } from "../contexts/projectContext";
+import { ProjectsContext } from "../contexts/projectsContext";
 
 // TODO: Create Styled Theme
 const color = {
   primary: "#007BC5"
 };
 
-const Header = styled.header`
+const MainHeader = styled.header`
   width: 100%;
   padding: 1.5em 4.2667% 1.25em;
   background-color: rgba(0, 0, 0, 0.05);
@@ -54,8 +54,8 @@ const ClearInput = styled.span`
   top: calc(50% + 0.5px);
   transform: translateY(-50%);
   right: 0.35em;
-  width: 1em;
-  height: 1em;
+  width: 0.9em;
+  height: 0.9em;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 50%;
 
@@ -88,15 +88,13 @@ const ProjectFilters = ({
   updateProgramFilter
   // updateRoleFilter
 }) => {
-  const [projects, setLoading] = useContext(ProjectContext);
+  const [projects, setLoading] = useContext(ProjectsContext);
 
   const [projectFilter, setProjectFilter] = useState("");
   const [clientFilter, setClientFilter] = useState("");
   const [activeClient, setActiveClient] = useState("");
   const [programFilter, setProgramFilter] = useState("");
   const [activeProgram, setActiveProgram] = useState("");
-  // const [roleFilter, setRoleFilter] = useState("");
-  // const [activeRole, setActiveRole] = useState("");
 
   const updateActiveFilter = (inputName, filterType) => {
     const filters = document.getElementsByName(inputName);
@@ -159,16 +157,9 @@ const ProjectFilters = ({
     updateProgramFilter(programFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programFilter]);
-  // useEffect(() => {
-  //   !setLoading && updateActiveFilter("role", roleFilter);
-  //   console.log("Active Role:", activeRole);
-
-  //   updateRoleFilter(roleFilter);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [roleFilter]);
 
   return (
-    <Header className="project-filters">
+    <MainHeader className="project-filters">
       <SearchField>
         <Input
           type="text"
@@ -195,7 +186,7 @@ const ProjectFilters = ({
                 setActiveClient(e.target.value);
               }}
             >
-              All IWA
+              All
             </Button>
             <Button
               name="client"
@@ -205,7 +196,7 @@ const ProjectFilters = ({
                 setActiveClient(e.target.value);
               }}
             >
-              Only HMA
+              HMA
             </Button>
             <Button
               name="client"
@@ -215,7 +206,7 @@ const ProjectFilters = ({
                 setActiveClient(e.target.value);
               }}
             >
-              Only GMA
+              GMA
             </Button>
           </span>
         )}
@@ -293,7 +284,7 @@ const ProjectFilters = ({
           {filteredProjectsCount} of {projects.length} projects showing
         </small>
       </div>
-    </Header>
+    </MainHeader>
   );
 };
 

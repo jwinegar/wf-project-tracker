@@ -1,13 +1,16 @@
 import React from "react";
-import { ProjectProvider } from "./contexts/projectContext";
+import { ProjectsProvider } from "./contexts/projectsContext";
+import { RolesProvider } from "./contexts/rolesContext";
 import ProjectsList from "./components/ProjectsList";
 
 const App = () => {
   return (
     <div className="App">
-      <ProjectProvider>
-        <ProjectsList />
-      </ProjectProvider>
+      <ProjectsProvider>
+        <RolesProvider>
+          <ProjectsList />
+        </RolesProvider>
+      </ProjectsProvider>
     </div>
   );
 };

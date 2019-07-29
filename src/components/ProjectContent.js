@@ -1,22 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components/macro";
+import { RolesContext } from "../contexts/rolesContext";
 
 const DataTable = styled.table`
   width: 100%;
   table-layout: fixed;
+  margin-top: 0.8125em;
 `;
 const DataTableHeading = styled.th`
   vertical-align: bottom;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: left;
   font-size: 80%;
   line-height: 1;
   padding: 2px 10px 5px;
   border-bottom: solid 1px;
-
-  &:first-child {
-    width: 40%;
-    min-width: 40%;
-  }
 `;
 const DataTableRow = styled.tr`
   td {
@@ -42,7 +42,10 @@ const DataTableRow = styled.tr`
   }
 `;
 const DataTableCell = styled.td`
+  position: relative;
   vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
   padding: 5px 10px;
   
@@ -66,29 +69,49 @@ const ProjectContent = ({ project }) => {
     task => task.roleID && !NON_ROLES.includes(task.name)
   );
 
+  const [roles, setLoadingRoles] = useContext(RolesContext);
+
   const loggedHoursByRoleIDTotals = tasks
     .map(task => task.hours)
     .flat()
     .reduce((hours, task) => {
-      hours[task.roleID] = +task.hours + (hours[task.roleID] || 0);
+      hours[task.roleID] = task.hours + (hours[task.roleID] || 0);
       return hours;
     }, {});
   const hourTotalsByRoleID = Object.keys(loggedHoursByRoleIDTotals).map(
     hours => {
-      return { roleID: hours, hours: loggedHoursByRoleIDTotals[hours] };
+      return { ID: hours, hours: loggedHoursByRoleIDTotals[hours] };
     }
   );
 
-  const assignedTasksWithHours = [
-    ...assignedTasks
+  console.log(hourTotalsByRoleID);
+
+  const rolesWithHours = [
+    ...roles
       .concat(hourTotalsByRoleID)
       .reduce(
         (map, task) =>
-          map.set(task.roleID, Object.assign(map.get(task.roleID) || {}, task)),
+          map.set(task.ID, Object.assign(map.get(task.ID) || {}, task)),
         new Map()
       )
       .values()
-  ];
+  ].filter(role => role.hours);
+
+  const assignedTasksWithHours = [
+    ...assignedTasks
+      .concat(rolesWithHours)
+      .reduce(
+        (map, task) =>
+          map.set(task.roleID, Object.assign(map.get(task.ID) || {}, task)),
+        new Map()
+      )
+      .values()
+  ].reduce((acc, cur) => {
+    if (acc.indexOf(cur) === -1) {
+      acc.push(cur);
+    }
+    return acc;
+  }, []);
 
   const setExpire = expireDate => {
     const endDate = new Date(expireDate.slice(0, 19));
@@ -126,24 +149,29 @@ const ProjectContent = ({ project }) => {
 
   return (
     <React.Fragment>
-      {(hmaProgram || gmaProgram) && (
-        <div>
-          Program: {(hmaProgram && hmaProgram) || (gmaProgram && gmaProgram)}
-        </div>
-      )}
-      <h2>
-        {name}
-        <br />
-        <small>(Expires {setExpire(plannedCompletionDate)})</small>
-      </h2>
-      {assignedTasksWithHours.length > 0 ? (
+      <header>
+        {(hmaProgram || gmaProgram) && (
+          <p>
+            Program: {(hmaProgram && hmaProgram) || (gmaProgram && gmaProgram)}
+          </p>
+        )}
+        <h2>
+          {name}
+          <br />
+          <small>(Expires {setExpire(plannedCompletionDate)})</small>
+        </h2>
+      </header>
+      {setLoadingRoles ? (
+        <div>Collecting Hours...</div>
+      ) : assignedTasksWithHours.length > 0 ? (
         <DataTable width="100%" border="0" cellPadding="5" cellSpacing="0">
           <tbody>
             <tr>
-              <DataTableHeading>Role:</DataTableHeading>
-              <DataTableHeading>Hours Scoped:</DataTableHeading>
-              <DataTableHeading>Hours Logged:</DataTableHeading>
-              <DataTableHeading>Hours Remaining:</DataTableHeading>
+              <DataTableHeading width="40%">Role:</DataTableHeading>
+              <DataTableHeading>Scoped:</DataTableHeading>
+              <DataTableHeading>Logged:</DataTableHeading>
+              <DataTableHeading>Remaining:</DataTableHeading>
+              <DataTableHeading width="10%">Complete:</DataTableHeading>
             </tr>
             {assignedTasksWithHours
               .sort((a, b) => (a.name > b.name ? 1 : -1))
@@ -159,7 +187,7 @@ const ProjectContent = ({ project }) => {
                     {task.workRequired
                       ? task.workRequired / 60 +
                         setHrsLabel(task.workRequired / 60)
-                      : "-"}
+                      : "Not Scoped"}
                   </DataTableCell>
                   <DataTableCell className="task-used-hrs">
                     {setHours(task.hours)}
@@ -172,6 +200,15 @@ const ProjectContent = ({ project }) => {
                         setHrsLabel(
                           task.workRequired / 60 - setHours(task.hours)
                         )
+                      : "-"}
+                  </DataTableCell>
+                  <DataTableCell className="task-percent-complete">
+                    {task.workRequired
+                      ? `${Math.round(
+                          (setHours(task.hours) / (task.workRequired / 60)) *
+                            100 *
+                            10
+                        ) / 10}%`
                       : "-"}
                   </DataTableCell>
                 </DataTableRow>

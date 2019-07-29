@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components/macro";
-import { ProjectContext } from "../contexts/projectContext";
+import { ProjectsContext } from "../contexts/projectsContext";
 
 import ProjectFilters from "./ProjectFilters";
 import ProjectContent from "./ProjectContent";
 
-const Loading = styled.div`
+const Message = styled.div`
   padding: 1.25em 4.2667%;
 `;
 const ListingContainer = styled.main`
@@ -24,12 +24,11 @@ const Project = styled.article`
 `;
 
 const ProjectsList = () => {
-  const [projects, setLoading] = useContext(ProjectContext);
+  const [projects, setLoadingProjects] = useContext(ProjectsContext);
   const [projectFilters, setProjectFilters] = useState({
     projectName: "",
     client: "",
-    program: "",
-    role: ""
+    program: ""
   });
 
   const filteredProjects = projects
@@ -61,9 +60,6 @@ const ProjectsList = () => {
   const updateProgramFilter = program => {
     setProjectFilters({ ...projectFilters, program });
   };
-  const updateRoleFilter = role => {
-    setProjectFilters({ ...projectFilters, role });
-  };
 
   return (
     <React.Fragment>
@@ -72,11 +68,10 @@ const ProjectsList = () => {
         updateClientFilter={updateClientFilter}
         updateProjectFilter={updateProjectFilter}
         updateProgramFilter={updateProgramFilter}
-        updateRoleFilter={updateRoleFilter}
       />
-      {setLoading ? (
-        <Loading>Loading Projects...</Loading>
-      ) : (
+      {setLoadingProjects ? (
+        <Message>Loading Projects...</Message>
+      ) : filteredProjects.length > 0 ? (
         <ListingContainer className="projects">
           {filteredProjects.map(project => (
             <Project className="project" key={project.ID}>
@@ -84,6 +79,8 @@ const ProjectsList = () => {
             </Project>
           ))}
         </ListingContainer>
+      ) : (
+        <Message>No projects at this time</Message>
       )}
     </React.Fragment>
   );
