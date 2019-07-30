@@ -1,9 +1,33 @@
-import React, { useState, useContext } from "react";
+import React, { Fragment } from "react";
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
 import styled from "styled-components/macro";
-import { ProjectsContext } from "../contexts/projectsContext";
 
-import ProjectFilters from "./ProjectFilters";
-import ProjectContent from "./ProjectContent";
+import parseISODateString from "./parseISODateString";
+// import ProjectFilters from "./ProjectFilters";
+import Project from "./Project";
+
+const PROJECTS_QUERY = gql`
+  query ProjectsQuery {
+    projects {
+      id
+      name
+      program
+      expireDate
+      tasks {
+        id
+        roleID
+        role
+        hoursScoped
+      }
+      hours {
+        roleID
+        role
+        hoursLogged
+      }
+    }
+  }
+`;
 
 const Message = styled.div`
   padding: 1.25em 4.2667%;
@@ -12,77 +36,36 @@ const ListingContainer = styled.main`
   width: 100%;
   padding: 2.5em 4.2667%;
 `;
-const Project = styled.article`
-  width: 100%;
-  padding: 1.5em 2em 2em;
-  background-color: white;
-  border-radius: 5px;
-
-  & + & {
-    margin-top: 2em;
-  }
-`;
 
 const ProjectsList = () => {
-  const [projects, setLoadingProjects] = useContext(ProjectsContext);
-  const [projectFilters, setProjectFilters] = useState({
-    projectName: "",
-    client: "",
-    program: ""
-  });
-
-  const filteredProjects = projects
-    .filter(project =>
-      project.name.toLowerCase().includes(projectFilters.client.toLowerCase())
-    )
-    .filter(project =>
-      project.name
-        .toLowerCase()
-        .includes(projectFilters.projectName.toLowerCase())
-    )
-    .filter(project =>
-      !!projectFilters.program
-        ? (project["DE:Wun LA Program for Innocean HMA"] ||
-            project["DE:Wun LA Program for Innocean GMA"]) &&
-          (
-            project["DE:Wun LA Program for Innocean HMA"] ||
-            project["DE:Wun LA Program for Innocean GMA"]
-          ).includes(projectFilters.program)
-        : project
-    );
-
-  const updateClientFilter = client => {
-    setProjectFilters({ ...projectFilters, client });
-  };
-  const updateProjectFilter = projectName => {
-    setProjectFilters({ ...projectFilters, projectName });
-  };
-  const updateProgramFilter = program => {
-    setProjectFilters({ ...projectFilters, program });
-  };
-
   return (
-    <React.Fragment>
-      <ProjectFilters
-        filteredProjectsCount={filteredProjects.length}
-        updateClientFilter={updateClientFilter}
-        updateProjectFilter={updateProjectFilter}
-        updateProgramFilter={updateProgramFilter}
-      />
-      {setLoadingProjects ? (
-        <Message>Loading Projects...</Message>
-      ) : filteredProjects.length > 0 ? (
-        <ListingContainer className="projects">
-          {filteredProjects.map(project => (
-            <Project className="project" key={project.ID}>
-              <ProjectContent project={project} />
-            </Project>
-          ))}
-        </ListingContainer>
-      ) : (
-        <Message>No projects at this time</Message>
-      )}
-    </React.Fragment>
+    <Fragment>
+      <Query query={PROJECTS_QUERY}>
+        {({ loading, error, data }) => {
+          if (loading) {
+            return <Message>Loading Projects...</Message>;
+          }
+          if (error) {
+            console.log(error);
+          }
+
+          return (
+            <ListingContainer className="projects">
+              {data.projects
+                .filter(
+                  project =>
+                    parseISODateString(project.expireDate).getTime() >=
+                    new Date().getTime()
+                )
+                .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1))
+                .map(project => (
+                  <Project key={project.id} project={project} />
+                ))}
+            </ListingContainer>
+          );
+        }}
+      </Query>
+    </Fragment>
   );
 };
 
