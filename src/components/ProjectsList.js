@@ -1,14 +1,14 @@
 import React, { Fragment } from "react";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { Query } from "react-apollo";
 import styled from "styled-components/macro";
 
 import parseISODateString from "./parseISODateString";
 // import ProjectFilters from "./ProjectFilters";
 import Project from "./Project";
 
-const PROJECTS_QUERY = gql`
-  query ProjectsQuery {
+const GET_PROJECTS = gql`
+  query getProjects {
     projects {
       id
       name
@@ -38,33 +38,26 @@ const ListingContainer = styled.main`
 `;
 
 const ProjectsList = () => {
+  const { loading, data } = useQuery(GET_PROJECTS);
+
   return (
     <Fragment>
-      <Query query={PROJECTS_QUERY}>
-        {({ loading, error, data }) => {
-          if (loading) {
-            return <Message>Loading Projects...</Message>;
-          }
-          if (error) {
-            console.log(error);
-          }
-
-          return (
-            <ListingContainer className="projects">
-              {data.projects
-                .filter(
-                  project =>
-                    parseISODateString(project.expireDate).getTime() >=
-                    new Date().getTime()
-                )
-                .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1))
-                .map(project => (
-                  <Project key={project.id} project={project} />
-                ))}
-            </ListingContainer>
-          );
-        }}
-      </Query>
+      {loading ? (
+        <Message>Loading Projects...</Message>
+      ) : (
+        <ListingContainer className="projects">
+          {data.projects
+            .filter(
+              project =>
+                parseISODateString(project.expireDate).getTime() >=
+                new Date().getTime()
+            )
+            .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1))
+            .map(project => (
+              <Project key={project.id} project={project} />
+            ))}
+        </ListingContainer>
+      )}
     </Fragment>
   );
 };
