@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
-import { ProjectsContext } from "../contexts/projectsContext";
 
 // TODO: Create Styled Theme
 const color = {
@@ -10,7 +9,7 @@ const color = {
 const MainHeader = styled.header`
   width: 100%;
   padding: 1.5em 4.2667% 1.25em;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.075);
   border-bottom: solid 1px rgba(0, 0, 0, 0.075);
 `;
 const Input = styled.input`
@@ -82,14 +81,12 @@ const ClearInput = styled.span`
 `;
 
 const ProjectFilters = ({
+  currentProjects,
   filteredProjectsCount,
   updateClientFilter,
   updateProjectFilter,
   updateProgramFilter
-  // updateRoleFilter
 }) => {
-  const [projects, setLoading] = useContext(ProjectsContext);
-
   const [projectFilter, setProjectFilter] = useState("");
   const [clientFilter, setClientFilter] = useState("");
   const [activeClient, setActiveClient] = useState("");
@@ -110,19 +107,9 @@ const ProjectFilters = ({
     activeFilter.disabled = true;
   };
 
-  const programs = projects
-    .filter(
-      project =>
-        (project["DE:Wun LA Program for Innocean HMA"] ||
-          project["DE:Wun LA Program for Innocean GMA"]) &&
-        (project["DE:Wun LA Program for Innocean HMA"] ||
-          project["DE:Wun LA Program for Innocean GMA"])
-    )
-    .map(
-      project =>
-        project["DE:Wun LA Program for Innocean HMA"] ||
-        project["DE:Wun LA Program for Innocean GMA"]
-    )
+  const programs = currentProjects
+    .filter(project => project.program)
+    .map(project => project.program)
     .reduce((acc, cur) => {
       if (acc.indexOf(cur) === -1) {
         acc.push(cur);
@@ -131,27 +118,32 @@ const ProjectFilters = ({
     }, [])
     .sort();
 
-  useEffect(() => {
-    if (!setLoading) {
-      updateActiveFilter("client", clientFilter);
-      updateActiveFilter("program", programFilter);
-      // updateActiveFilter("role", roleFilter);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projects]);
+  // const tasks = currentProjects
+  //   .map(project => project.tasks.map(task => task.role))
+  //   .flat();
+  // const hours = currentProjects
+  //   .map(project => project.hours.map(hour => hour.role))
+  //   .flat();
+
+  // const roles = [...tasks, ...hours]
+  //   .filter((role, index) => [...tasks, ...hours].indexOf(role) === index)
+  //   .sort();
+
+  // console.log(roles);
+
   useEffect(() => {
     updateProjectFilter(projectFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectFilter]);
   useEffect(() => {
-    !setLoading && updateActiveFilter("client", clientFilter);
+    updateActiveFilter("client", clientFilter);
     console.log("Active Client:", activeClient);
 
     updateClientFilter(clientFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientFilter]);
   useEffect(() => {
-    !setLoading && updateActiveFilter("program", programFilter);
+    updateActiveFilter("program", programFilter);
     console.log("Active Program:", activeProgram);
 
     updateProgramFilter(programFilter);
@@ -159,7 +151,7 @@ const ProjectFilters = ({
   }, [programFilter]);
 
   return (
-    <MainHeader className="project-filters">
+    <MainHeader>
       <SearchField>
         <Input
           type="text"
@@ -174,114 +166,102 @@ const ProjectFilters = ({
         <span>
           <small>Client:</small>
         </span>{" "}
-        {setLoading ? (
-          <small>Loading...</small>
-        ) : (
-          <span className="button-group">
-            <Button
-              name="client"
-              value=""
-              onClick={e => {
-                setClientFilter(e.target.value);
-                setActiveClient(e.target.value);
-              }}
-            >
-              All
-            </Button>
-            <Button
-              name="client"
-              value="HMA"
-              onClick={e => {
-                setClientFilter(e.target.value);
-                setActiveClient(e.target.value);
-              }}
-            >
-              HMA
-            </Button>
-            <Button
-              name="client"
-              value="GMA"
-              onClick={e => {
-                setClientFilter(e.target.value);
-                setActiveClient(e.target.value);
-              }}
-            >
-              GMA
-            </Button>
-          </span>
-        )}
+        <span>
+          <Button
+            name="client"
+            value=""
+            onClick={e => {
+              setClientFilter(e.target.value);
+              setActiveClient(e.target.value);
+            }}
+          >
+            All
+          </Button>
+          <Button
+            name="client"
+            value="HMA"
+            onClick={e => {
+              setClientFilter(e.target.value);
+              setActiveClient(e.target.value);
+            }}
+          >
+            HMA
+          </Button>
+          <Button
+            name="client"
+            value="GMA"
+            onClick={e => {
+              setClientFilter(e.target.value);
+              setActiveClient(e.target.value);
+            }}
+          >
+            GMA
+          </Button>
+        </span>
       </div>
       <div>
         <span>
           <small>Program:</small>
         </span>{" "}
-        {setLoading ? (
-          <small>Loading...</small>
-        ) : (
-          <span className="Button-group">
+        <span>
+          <Button
+            name="program"
+            value=""
+            onClick={e => {
+              setProgramFilter(e.target.value);
+              setActiveProgram(e.target.value);
+            }}
+          >
+            All
+          </Button>
+          {programs.map((program, index) => (
             <Button
+              key={index}
               name="program"
-              value=""
+              value={program}
               onClick={e => {
                 setProgramFilter(e.target.value);
                 setActiveProgram(e.target.value);
               }}
             >
-              All
+              {program}
             </Button>
-            {programs.map((program, index) => (
-              <Button
-                key={index}
-                name="program"
-                value={program}
-                onClick={e => {
-                  setProgramFilter(e.target.value);
-                  setActiveProgram(e.target.value);
-                }}
-              >
-                {program}
-              </Button>
-            ))}
-          </span>
-        )}
+          ))}
+        </span>
       </div>
       {/* <div>
         <span>
           <small>Role:</small>
         </span>{" "}
-        {setLoading ? (
-          <small>Loading...</small>
-        ) : (
-          <span className="Button-group">
+        <span>
+          <Button
+            name="program"
+            value=""
+            onClick={e => {
+              setProgramFilter(e.target.value);
+              setActiveProgram(e.target.value);
+            }}
+          >
+            All
+          </Button>
+          {roles.map((role, index) => (
             <Button
+              key={index}
               name="role"
-              value=""
+              value={role}
               onClick={e => {
-                setRoleFilter(e.target.value);
-                setActiveRole(e.target.value);
+                setProgramFilter(e.target.value);
+                setActiveProgram(e.target.value);
               }}
             >
-              All
+              {role}
             </Button>
-            {programs.map((program, index) => (
-              <Button
-                key={index}
-                name="role"
-                value={program}
-                onClick={e => {
-                  setRoleFilter(e.target.value);
-                  setActiveRole(e.target.value);
-                }}
-              >
-                {program}
-              </Button>
-            ))}
-          </span>
-        )}
+          ))}
+        </span>
       </div> */}
       <div>
         <small>
-          {filteredProjectsCount} of {projects.length} projects showing
+          {filteredProjectsCount} of {currentProjects.length} projects showing
         </small>
       </div>
     </MainHeader>

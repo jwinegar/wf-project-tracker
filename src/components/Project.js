@@ -122,19 +122,17 @@ const Project = ({ project: { name, program, expireDate, tasks, hours } }) => {
               .sort((a, b) => (a.role > b.role ? 1 : -1))
               .map(task => (
                 <DataTableRow key={task.id ? task.id : task.roleID}>
-                  <DataTableCell className="task-role">
-                    {task.role}
-                  </DataTableCell>
-                  <DataTableCell className="task-scoped-hrs">
+                  <DataTableCell>{task.role}</DataTableCell>
+                  <DataTableCell>
                     {task.hoursScoped
                       ? task.hoursScoped + setHrsLabel(task.hoursScoped)
                       : "Not Scoped"}
                   </DataTableCell>
-                  <DataTableCell className="task-logged-hrs">
+                  <DataTableCell>
                     {checkHoursLogged(task.hoursLogged) +
                       setHrsLabel(checkHoursLogged(task.hoursLogged))}
                   </DataTableCell>
-                  <DataTableCell className="task-remaining-hrs">
+                  <DataTableCell>
                     {task.hoursScoped
                       ? task.hoursScoped -
                         checkHoursLogged(task.hoursLogged) +
@@ -143,7 +141,7 @@ const Project = ({ project: { name, program, expireDate, tasks, hours } }) => {
                         )
                       : "-"}
                   </DataTableCell>
-                  <DataTableCell className="task-percent-complete">
+                  <DataTableCell>
                     {task.hoursScoped
                       ? `${Math.round(
                           (checkHoursLogged(task.hoursLogged) /
