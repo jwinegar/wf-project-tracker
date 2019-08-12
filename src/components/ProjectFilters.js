@@ -93,10 +93,10 @@ const ProjectFilters = ({
   const [programFilter, setProgramFilter] = useState("");
   const [activeProgram, setActiveProgram] = useState("");
 
-  const updateActiveFilter = (inputName, filterType) => {
+  const updateActiveFilter = (inputName, activeFilterName) => {
     const filters = document.getElementsByName(inputName);
     const activeFilter = [...filters].find(
-      filter => filter.value === filterType
+      filter => filter.value === activeFilterName
     );
 
     filters.forEach(filter => {
@@ -136,16 +136,12 @@ const ProjectFilters = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectFilter]);
   useEffect(() => {
-    updateActiveFilter("client", clientFilter);
-    console.log("Active Client:", activeClient);
-
+    updateActiveFilter("client", activeClient);
     updateClientFilter(clientFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientFilter]);
   useEffect(() => {
-    updateActiveFilter("program", programFilter);
-    console.log("Active Program:", activeProgram);
-
+    updateActiveFilter("program", activeProgram);
     updateProgramFilter(programFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programFilter]);
