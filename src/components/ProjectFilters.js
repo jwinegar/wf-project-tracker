@@ -89,14 +89,12 @@ const ProjectFilters = ({
 }) => {
   const [projectFilter, setProjectFilter] = useState("");
   const [clientFilter, setClientFilter] = useState("");
-  const [activeClient, setActiveClient] = useState("");
   const [programFilter, setProgramFilter] = useState("");
-  const [activeProgram, setActiveProgram] = useState("");
 
-  const updateActiveFilter = (inputName, activeFilterName) => {
+  const updateActiveFilter = (inputName, filterType) => {
     const filters = document.getElementsByName(inputName);
     const activeFilter = [...filters].find(
-      filter => filter.value === activeFilterName
+      filter => filter.value === filterType
     );
 
     filters.forEach(filter => {
@@ -136,12 +134,14 @@ const ProjectFilters = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectFilter]);
   useEffect(() => {
-    updateActiveFilter("client", activeClient);
+    updateActiveFilter("client", clientFilter);
+
     updateClientFilter(clientFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientFilter]);
   useEffect(() => {
-    updateActiveFilter("program", activeProgram);
+    updateActiveFilter("program", programFilter);
+
     updateProgramFilter(programFilter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programFilter]);
@@ -168,7 +168,6 @@ const ProjectFilters = ({
             value=""
             onClick={e => {
               setClientFilter(e.target.value);
-              setActiveClient(e.target.value);
             }}
           >
             All
@@ -178,7 +177,6 @@ const ProjectFilters = ({
             value="HMA"
             onClick={e => {
               setClientFilter(e.target.value);
-              setActiveClient(e.target.value);
             }}
           >
             HMA
@@ -188,7 +186,6 @@ const ProjectFilters = ({
             value="GMA"
             onClick={e => {
               setClientFilter(e.target.value);
-              setActiveClient(e.target.value);
             }}
           >
             GMA
@@ -205,7 +202,6 @@ const ProjectFilters = ({
             value=""
             onClick={e => {
               setProgramFilter(e.target.value);
-              setActiveProgram(e.target.value);
             }}
           >
             All
@@ -217,7 +213,6 @@ const ProjectFilters = ({
               value={program}
               onClick={e => {
                 setProgramFilter(e.target.value);
-                setActiveProgram(e.target.value);
               }}
             >
               {program}
