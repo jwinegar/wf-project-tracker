@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
 
 import parseISODateString from "./parseISODateString";
@@ -45,6 +45,32 @@ const ProjectsList = () => {
     client: "",
     program: ""
   });
+  const { projectName, client, program } = filters;
+
+  const updateProjectFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, projectName: val };
+      });
+    },
+    [setFilters]
+  );
+  const updateClientFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, client: val };
+      });
+    },
+    [setFilters]
+  );
+  const updateProgramFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, program: val };
+      });
+    },
+    [setFilters]
+  );
 
   const currentProjects = projects =>
     projects
@@ -61,48 +87,38 @@ const ProjectsList = () => {
     projects
       // filter by client
       .filter(project =>
-        project.name.toLowerCase().includes(filters.client.toLowerCase())
+        project.name.toLowerCase().includes(client.toLowerCase())
       )
       // filter by project name
       .filter(project =>
-        project.name.toLowerCase().includes(filters.projectName.toLowerCase())
+        project.name.toLowerCase().includes(projectName.toLowerCase())
       )
       // filter by program
       .filter(project =>
-        filters.program ? project.program.includes(filters.program) : project
+        program ? project.program.includes(program) : project
       );
-
-  const updateClientFilter = client => {
-    setFilters({ ...filters, client });
-  };
-  const updateProjectFilter = projectName => {
-    setFilters({ ...filters, projectName });
-  };
-  const updateProgramFilter = program => {
-    setFilters({ ...filters, program });
-  };
 
   if (loading) return <Message>Loading Projects...</Message>;
   if (error) return <Message>{error.message}</Message>;
   if (!data || !data.projects) return <Message>No projects found</Message>;
 
   return (
-    <Fragment>
+    <>
       <ProjectFilters
         currentProjects={currentProjects(data.projects)}
+        updateProjectFilter={updateProjectFilter}
+        updateClientFilter={updateClientFilter}
+        updateProgramFilter={updateProgramFilter}
         filteredProjectsCount={
           filterProjects(currentProjects(data.projects)).length
         }
-        updateClientFilter={updateClientFilter}
-        updateProjectFilter={updateProjectFilter}
-        updateProgramFilter={updateProgramFilter}
       />
       <ListingContainer>
         {filterProjects(currentProjects(data.projects)).map(project => (
           <Project key={project.id} project={project} />
         ))}
       </ListingContainer>
-    </Fragment>
+    </>
   );
 };
 

@@ -82,24 +82,22 @@ const ClearInput = styled.span`
 
 const ProjectFilters = ({
   currentProjects,
-  filteredProjectsCount,
-  updateClientFilter,
   updateProjectFilter,
-  updateProgramFilter
+  updateClientFilter,
+  updateProgramFilter,
+  filteredProjectsCount
 }) => {
   const [projectFilter, setProjectFilter] = useState("");
   const [clientFilter, setClientFilter] = useState("");
   const [programFilter, setProgramFilter] = useState("");
 
   const updateActiveFilter = (inputName, filterType) => {
-    const filters = document.getElementsByName(inputName);
-    const activeFilter = [...filters].find(
-      filter => filter.value === filterType
-    );
+    const inputs = document.getElementsByName(inputName);
+    const activeFilter = [...inputs].find(input => input.value === filterType);
 
-    filters.forEach(filter => {
-      filter.classList.remove("active");
-      filter.disabled = false;
+    inputs.forEach(input => {
+      input.classList.remove("active");
+      input.disabled = false;
     });
     activeFilter.classList.add("active");
     activeFilter.disabled = true;
@@ -131,20 +129,19 @@ const ProjectFilters = ({
 
   useEffect(() => {
     updateProjectFilter(projectFilter);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectFilter]);
-  useEffect(() => {
-    updateActiveFilter("client", clientFilter);
+  }, [projectFilter, updateProjectFilter]);
 
+  useEffect(() => {
     updateClientFilter(clientFilter);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientFilter]);
-  useEffect(() => {
-    updateActiveFilter("program", programFilter);
 
+    updateActiveFilter("client", clientFilter);
+  }, [clientFilter, updateClientFilter]);
+
+  useEffect(() => {
     updateProgramFilter(programFilter);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [programFilter]);
+
+    updateActiveFilter("program", programFilter);
+  }, [programFilter, updateProgramFilter]);
 
   return (
     <MainHeader>
@@ -154,7 +151,7 @@ const ProjectFilters = ({
           placeholder="Search Projects"
           value={projectFilter}
           onKeyDown={e => e.keyCode === 27 && setProjectFilter("")}
-          onChange={e => setProjectFilter(e.target.value)}
+          onChange={e => setProjectFilter(e.currentTarget.value)}
         />
         {projectFilter && <ClearInput onClick={e => setProjectFilter("")} />}
       </SearchField>
@@ -167,7 +164,7 @@ const ProjectFilters = ({
             name="client"
             value=""
             onClick={e => {
-              setClientFilter(e.target.value);
+              setClientFilter(e.currentTarget.value);
             }}
           >
             All
@@ -176,7 +173,7 @@ const ProjectFilters = ({
             name="client"
             value="HMA"
             onClick={e => {
-              setClientFilter(e.target.value);
+              setClientFilter(e.currentTarget.value);
             }}
           >
             HMA
@@ -185,7 +182,7 @@ const ProjectFilters = ({
             name="client"
             value="GMA"
             onClick={e => {
-              setClientFilter(e.target.value);
+              setClientFilter(e.currentTarget.value);
             }}
           >
             GMA
@@ -201,7 +198,7 @@ const ProjectFilters = ({
             name="program"
             value=""
             onClick={e => {
-              setProgramFilter(e.target.value);
+              setProgramFilter(e.currentTarget.value);
             }}
           >
             All
@@ -212,7 +209,7 @@ const ProjectFilters = ({
               name="program"
               value={program}
               onClick={e => {
-                setProgramFilter(e.target.value);
+                setProgramFilter(e.currentTarget.value);
               }}
             >
               {program}
@@ -229,8 +226,8 @@ const ProjectFilters = ({
             name="program"
             value=""
             onClick={e => {
-              setProgramFilter(e.target.value);
-              setActiveProgram(e.target.value);
+              setProgramFilter(e.currentTarget.value);
+              setActiveProgram(e.currentTarget.value);
             }}
           >
             All
@@ -241,8 +238,8 @@ const ProjectFilters = ({
               name="role"
               value={role}
               onClick={e => {
-                setProgramFilter(e.target.value);
-                setActiveProgram(e.target.value);
+                setProgramFilter(e.currentTarget.value);
+                setActiveProgram(e.currentTarget.value);
               }}
             >
               {role}
