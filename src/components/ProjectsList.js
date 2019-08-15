@@ -14,17 +14,6 @@ const PROJECTS_QUERY = gql`
       name
       program
       expireDate
-      tasks {
-        id
-        roleID
-        role
-        hoursScoped
-      }
-      hours {
-        roleID
-        role
-        hoursLogged
-      }
     }
   }
 `;
