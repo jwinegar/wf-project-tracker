@@ -3,7 +3,6 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
 
-import parseISODateString from "./parseISODateString";
 import ProjectFilters from "./ProjectFilters";
 import Project from "./Project";
 
@@ -61,17 +60,6 @@ const ProjectsList = () => {
     [setFilters]
   );
 
-  const currentProjects = projects =>
-    projects
-      // filter by date expiring
-      .filter(
-        project =>
-          parseISODateString(project.expireDate).getTime() >=
-          new Date().getTime()
-      )
-      // sort projects by expiration: closest to furthest
-      .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1));
-
   const filterProjects = projects =>
     projects
       // filter by client
@@ -85,7 +73,9 @@ const ProjectsList = () => {
       // filter by program
       .filter(project =>
         program ? project.program.includes(program) : project
-      );
+      )
+      // sort projects by expiration: closest to furthest
+      .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1));
 
   if (loading) return <Message>Loading Projects...</Message>;
   if (error) return <Message>{error.message}</Message>;
@@ -94,16 +84,14 @@ const ProjectsList = () => {
   return (
     <>
       <ProjectFilters
-        currentProjects={currentProjects(data.projects)}
+        projects={data.projects}
         updateProjectFilter={updateProjectFilter}
         updateClientFilter={updateClientFilter}
         updateProgramFilter={updateProgramFilter}
-        filteredProjectsCount={
-          filterProjects(currentProjects(data.projects)).length
-        }
+        filteredProjectsCount={filterProjects(data.projects).length}
       />
       <ListingContainer>
-        {filterProjects(currentProjects(data.projects)).map(project => (
+        {filterProjects(data.projects).map(project => (
           <Project key={project.id} project={project} />
         ))}
       </ListingContainer>

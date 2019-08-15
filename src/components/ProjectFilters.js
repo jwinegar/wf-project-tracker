@@ -81,7 +81,7 @@ const ClearInput = styled.span`
 `;
 
 const ProjectFilters = ({
-  currentProjects,
+  projects,
   updateProjectFilter,
   updateClientFilter,
   updateProgramFilter,
@@ -103,7 +103,7 @@ const ProjectFilters = ({
     activeFilter.disabled = true;
   };
 
-  const programs = currentProjects
+  const programs = projects
     .filter(project => project.program)
     .map(project => project.program)
     .reduce((acc, cur) => {
@@ -114,10 +114,10 @@ const ProjectFilters = ({
     }, [])
     .sort();
 
-  // const tasks = currentProjects
+  // const tasks = projects
   //   .map(project => project.tasks.map(task => task.role))
   //   .flat();
-  // const hours = currentProjects
+  // const hours = projects
   //   .map(project => project.hours.map(hour => hour.role))
   //   .flat();
 
@@ -249,7 +249,7 @@ const ProjectFilters = ({
       </div> */}
       <div>
         <small>
-          {filteredProjectsCount} of {currentProjects.length} projects showing
+          {filteredProjectsCount} of {projects.length} projects showing
         </small>
       </div>
     </MainHeader>
