@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-import parseISODateString from "./parseISODateString";
+import { parseISODateString } from "./utils";
 import Tasks from "./Tasks";
 
 const Container = styled.article`
@@ -43,7 +43,9 @@ const Project = ({ project: { id, name, program, expireDate } }) => {
         <h2>
           {name}
           <br />
-          <small>(Expires {setExpiring(expireDate)})</small>
+          <small style={{ fontSize: "65%" }}>
+            (Expires {setExpiring(expireDate)})
+          </small>
         </h2>
       </header>
       <Tasks projectID={id} />

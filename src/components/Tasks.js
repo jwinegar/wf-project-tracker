@@ -47,10 +47,10 @@ const DataTableRow = styled.tr`
     transition: backgound-color 0.5s;
   }
 
-  &.hrs-over td {
+  &.alert-error {
     color: red;
   }
-  &.hrs-met td {
+  &.alert-accomplished td {
     color: rgba(0, 0, 0, 0.2);
   }
 
@@ -59,7 +59,7 @@ const DataTableRow = styled.tr`
     td {
       background-color: rgba(0, 0, 0, 0.05);
     }
-    &.hrs-over td {
+    &.alert-error td {
       background-color: rgba(255, 0, 0, 0.1);
     }
   }
@@ -98,8 +98,16 @@ const Tasks = ({ projectID }) => {
     ];
   };
 
-  const setHrsLabel = hours => (hours === 1 || hours === -1 ? "hr" : "hrs");
   const checkHoursLogged = hours => (hours ? hours : 0);
+
+  const setHrsLabel = hours => (hours === 1 || hours === -1 ? "hr" : "hrs");
+  const setHoursFlag = task => {
+    const { hoursScoped, hoursLogged } = task;
+
+    return !hoursScoped || hoursScoped - hoursLogged < 0
+      ? "alert-error"
+      : hoursScoped - hoursLogged === 0 && "alert-accomplished";
+  };
 
   if (loading) return <Message>Loading Tasks...</Message>;
   if (error) return <Message>{error.message}</Message>;
@@ -119,7 +127,10 @@ const Tasks = ({ projectID }) => {
         {tasksHours(data)
           .sort((a, b) => (a.role > b.role ? 1 : -1))
           .map(task => (
-            <DataTableRow key={task.id ? task.id : task.roleID}>
+            <DataTableRow
+              key={task.id ? task.id : task.roleID}
+              className={setHoursFlag(task)}
+            >
               <DataTableCell>{task.role}</DataTableCell>
               <DataTableCell>
                 {task.hoursScoped

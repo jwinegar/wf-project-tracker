@@ -217,36 +217,6 @@ const ProjectFilters = ({
           ))}
         </span>
       </div>
-      {/* <div>
-        <span>
-          <small>Role:</small>
-        </span>{" "}
-        <span>
-          <Button
-            name="program"
-            value=""
-            onClick={e => {
-              setProgramFilter(e.currentTarget.value);
-              setActiveProgram(e.currentTarget.value);
-            }}
-          >
-            All
-          </Button>
-          {roles.map((role, index) => (
-            <Button
-              key={index}
-              name="role"
-              value={role}
-              onClick={e => {
-                setProgramFilter(e.currentTarget.value);
-                setActiveProgram(e.currentTarget.value);
-              }}
-            >
-              {role}
-            </Button>
-          ))}
-        </span>
-      </div> */}
       <div>
         <small>
           {filteredProjectsCount} of {projects.length} projects showing
