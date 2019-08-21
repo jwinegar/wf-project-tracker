@@ -137,4 +137,4 @@ const Tasks = ({ project }) => {
   );
 };
 
-export default React.memo(Tasks);
+export default Tasks;

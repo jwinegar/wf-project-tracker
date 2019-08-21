@@ -260,4 +260,4 @@ const ProjectFilters = ({
   );
 };
 
-export default React.memo(ProjectFilters);
+export default ProjectFilters;

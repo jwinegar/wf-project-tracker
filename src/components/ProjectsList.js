@@ -119,7 +119,9 @@ const ProjectsList = () => {
         updateClientFilter={updateClientFilter}
         updateProgramFilter={updateProgramFilter}
         updateRoleFilter={updateRoleFilter}
-        filteredProjectsCount={filterProjects(data.projects).length}
+        filteredProjectsCount={
+          getProjectsByRole(filterProjects(data.projects), filters.role).length
+        }
       />
       <Container>
         {filters.role ? (
@@ -140,4 +142,4 @@ const ProjectsList = () => {
   );
 };
 
-export default React.memo(ProjectsList);
+export default ProjectsList;

@@ -152,4 +152,4 @@ const RoleOverview = ({ role, projects }) => {
   );
 };
 
-export default React.memo(RoleOverview);
+export default RoleOverview;
