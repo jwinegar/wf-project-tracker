@@ -5,6 +5,7 @@ import styled from "styled-components/macro";
 
 import ProjectFilters from "./ProjectFilters";
 import Project from "./Project";
+import RoleOverview from "./RoleOverview";
 
 const PROJECTS_QUERY = gql`
   query projectsQuery {
@@ -13,6 +14,16 @@ const PROJECTS_QUERY = gql`
       name
       program
       expireDate
+      tasks {
+        roleID
+        role
+        hoursScoped
+      }
+      hours {
+        roleID
+        role
+        hoursLogged
+      }
     }
   }
 `;
@@ -20,9 +31,13 @@ const PROJECTS_QUERY = gql`
 const Message = styled.div`
   padding: 1.25em 4.2667%;
 `;
-const ListingContainer = styled.main`
+const Container = styled.main`
   width: 100%;
   padding: 2.5em 4.2667%;
+
+  & > * + * {
+    margin-top: 2em;
+  }
 `;
 
 const ProjectsList = () => {
@@ -31,7 +46,8 @@ const ProjectsList = () => {
   const [filters, setFilters] = useState({
     projectName: "",
     client: "",
-    program: ""
+    program: "",
+    role: ""
   });
   const { projectName, client, program } = filters;
 
@@ -59,6 +75,20 @@ const ProjectsList = () => {
     },
     [setFilters]
   );
+  const updateRoleFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, role: val };
+      });
+    },
+    [setFilters]
+  );
+
+  // get list of projects by role
+  const getProjectsByRole = (data, role) =>
+    role
+      ? data.filter(project => project.tasks.some(task => task.role === role))
+      : data;
 
   const filterProjects = projects =>
     projects
@@ -88,15 +118,26 @@ const ProjectsList = () => {
         updateProjectFilter={updateProjectFilter}
         updateClientFilter={updateClientFilter}
         updateProgramFilter={updateProgramFilter}
+        updateRoleFilter={updateRoleFilter}
         filteredProjectsCount={filterProjects(data.projects).length}
       />
-      <ListingContainer>
-        {filterProjects(data.projects).map(project => (
-          <Project key={project.id} project={project} />
-        ))}
-      </ListingContainer>
+      <Container>
+        {filters.role ? (
+          <RoleOverview
+            role={filters.role}
+            projects={getProjectsByRole(
+              filterProjects(data.projects),
+              filters.role
+            )}
+          />
+        ) : (
+          filterProjects(data.projects).map(project => (
+            <Project key={project.id} project={project} />
+          ))
+        )}
+      </Container>
     </>
   );
 };
 
-export default ProjectsList;
+export default React.memo(ProjectsList);

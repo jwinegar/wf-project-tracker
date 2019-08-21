@@ -85,11 +85,13 @@ const ProjectFilters = ({
   updateProjectFilter,
   updateClientFilter,
   updateProgramFilter,
+  updateRoleFilter,
   filteredProjectsCount
 }) => {
   const [projectFilter, setProjectFilter] = useState("");
   const [clientFilter, setClientFilter] = useState("");
   const [programFilter, setProgramFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
 
   const updateActiveFilter = (inputName, filterType) => {
     const inputs = document.getElementsByName(inputName);
@@ -114,18 +116,16 @@ const ProjectFilters = ({
     }, [])
     .sort();
 
-  // const tasks = projects
-  //   .map(project => project.tasks.map(task => task.role))
-  //   .flat();
-  // const hours = projects
-  //   .map(project => project.hours.map(hour => hour.role))
-  //   .flat();
+  const tasks = projects
+    .map(project => project.tasks.map(task => task.role))
+    .flat();
+  const hours = projects
+    .map(project => project.hours.map(hour => hour.role))
+    .flat();
 
-  // const roles = [...tasks, ...hours]
-  //   .filter((role, index) => [...tasks, ...hours].indexOf(role) === index)
-  //   .sort();
-
-  // console.log(roles);
+  const roles = [...tasks, ...hours]
+    .filter((role, index) => [...tasks, ...hours].indexOf(role) === index)
+    .sort();
 
   useEffect(() => {
     updateProjectFilter(projectFilter);
@@ -142,6 +142,12 @@ const ProjectFilters = ({
 
     updateActiveFilter("program", programFilter);
   }, [programFilter, updateProgramFilter]);
+
+  useEffect(() => {
+    updateRoleFilter(roleFilter);
+
+    updateActiveFilter("role", roleFilter);
+  }, [roleFilter, updateRoleFilter]);
 
   return (
     <MainHeader>
@@ -218,6 +224,34 @@ const ProjectFilters = ({
         </span>
       </div>
       <div>
+        <span>
+          <small>Role:</small>
+        </span>{" "}
+        <span>
+          <Button
+            name="role"
+            value=""
+            onClick={e => {
+              setRoleFilter(e.currentTarget.value);
+            }}
+          >
+            All
+          </Button>
+          {roles.map((role, index) => (
+            <Button
+              key={index}
+              name="role"
+              value={role}
+              onClick={e => {
+                setRoleFilter(e.currentTarget.value);
+              }}
+            >
+              {role}
+            </Button>
+          ))}
+        </span>
+      </div>
+      <div>
         <small>
           {filteredProjectsCount} of {projects.length} projects showing
         </small>
@@ -226,4 +260,4 @@ const ProjectFilters = ({
   );
 };
 
-export default ProjectFilters;
+export default React.memo(ProjectFilters);

@@ -1,25 +1,7 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
 
-const TASKS_QUERY = gql`
-  query tasksQuery($projectID: String!) {
-    project(id: $projectID) {
-      tasks {
-        id
-        roleID
-        role
-        hoursScoped
-      }
-      hours {
-        roleID
-        role
-        hoursLogged
-      }
-    }
-  }
-`;
+import { checkHoursLogged, setHrsLabel } from "./utils";
 
 const Message = styled.div`
   line-height: 0.85;
@@ -77,15 +59,9 @@ const DataTableCell = styled.td`
   }
 `;
 
-const Tasks = ({ projectID }) => {
-  const { data, loading, error } = useQuery(TASKS_QUERY, {
-    variables: { projectID }
-  });
-
+const Tasks = ({ project }) => {
   const tasksHours = data => {
-    const {
-      project: { tasks, hours }
-    } = data;
+    const { tasks, hours } = data;
 
     return [
       ...tasks
@@ -98,9 +74,6 @@ const Tasks = ({ projectID }) => {
     ];
   };
 
-  const checkHoursLogged = hours => (hours ? hours : 0);
-
-  const setHrsLabel = hours => (hours === 1 || hours === -1 ? "hr" : "hrs");
   const setHoursFlag = task => {
     const { hoursScoped, hoursLogged } = task;
 
@@ -109,9 +82,7 @@ const Tasks = ({ projectID }) => {
       : hoursScoped - hoursLogged === 0 && "alert-accomplished";
   };
 
-  if (loading) return <Message>Loading Tasks...</Message>;
-  if (error) return <Message>{error.message}</Message>;
-  if (!data || !data.project || tasksHours(data).length === 0)
+  if (tasksHours(project).length === 0)
     return <Message>No tasks assigned</Message>;
 
   return (
@@ -124,7 +95,7 @@ const Tasks = ({ projectID }) => {
           <DataTableHeading>Remaining Hours:</DataTableHeading>
           <DataTableHeading width="10%">Completed:</DataTableHeading>
         </tr>
-        {tasksHours(data)
+        {tasksHours(project)
           .sort((a, b) => (a.role > b.role ? 1 : -1))
           .map(task => (
             <DataTableRow
@@ -148,7 +119,7 @@ const Tasks = ({ projectID }) => {
                     setHrsLabel(
                       task.hoursScoped - checkHoursLogged(task.hoursLogged)
                     )
-                  : "-"}
+                  : "--"}
               </DataTableCell>
               <DataTableCell>
                 {task.hoursScoped
@@ -157,7 +128,7 @@ const Tasks = ({ projectID }) => {
                         100 *
                         10
                     ) / 10}%`
-                  : "-"}
+                  : "--"}
               </DataTableCell>
             </DataTableRow>
           ))}
@@ -166,4 +137,4 @@ const Tasks = ({ projectID }) => {
   );
 };
 
-export default Tasks;
+export default React.memo(Tasks);

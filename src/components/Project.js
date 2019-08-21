@@ -9,13 +9,10 @@ const Container = styled.article`
   padding: 1.5em 2em 2em;
   background-color: white;
   border-radius: 5px;
-
-  & + & {
-    margin-top: 2em;
-  }
 `;
 
-const Project = ({ project: { id, name, program, expireDate } }) => {
+const Project = ({ project }) => {
+  const { name, program, expireDate } = project;
   const setExpiring = expireDate => {
     const dayDiff =
       parseISODateString(expireDate).getTime() - new Date().getTime();
@@ -48,9 +45,9 @@ const Project = ({ project: { id, name, program, expireDate } }) => {
           </small>
         </h2>
       </header>
-      <Tasks projectID={id} />
+      <Tasks project={project} />
     </Container>
   );
 };
 
-export default Project;
+export default React.memo(Project);
