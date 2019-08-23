@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-import { checkHoursLogged, setHrsLabel } from "./utils";
+import { checkHoursLogged, setHrsLabel, percentComplete } from "./utils";
 
 const Container = styled.article`
   width: 100%;
@@ -12,6 +12,10 @@ const Container = styled.article`
   & + & {
     margin-top: 2em;
   }
+`;
+const Message = styled.div`
+  line-height: 0.85;
+  margin-top: 0.8125em;
 `;
 const DataTable = styled.table`
   width: 100%;
@@ -65,26 +69,65 @@ const DataTableCell = styled.td`
   }
 `;
 
+const getRoleHours = (role, data) => {
+  const { tasks, hours } = data;
+  const task = tasks.filter(task => task.role.includes(role));
+
+  const roleObj = [
+    ...task
+      .concat(hours)
+      .reduce(
+        (m, o) => m.set(o.roleID, Object.assign(m.get(o.roleID) || {}, o)),
+        new Map()
+      )
+      .values()
+  ][0];
+
+  return roleObj;
+};
+
+const getRoleHoursTotal = (role, dataArr, hrsType) => {
+  const seen = new Map();
+
+  const accHours = dataArr
+    .map(project => getRoleHours(role, project))
+    .filter(hour => {
+      let prev;
+
+      if (seen.hasOwnProperty(hour.roleID)) {
+        prev = seen[hour.roleID];
+        prev.hoursLogged.push(hour.hoursLogged);
+        prev.hoursScoped.push(hour.hoursScoped);
+
+        return false;
+      }
+
+      if (!Array.isArray(hour.hoursLogged)) {
+        hour.hoursLogged = [hour.hoursLogged];
+      }
+      if (!Array.isArray(hour.hoursScoped)) {
+        hour.hoursScoped = [hour.hoursScoped];
+      }
+
+      seen[hour.roleID] = hour;
+
+      return true;
+    });
+
+  const totalHours =
+    accHours.length > 0 &&
+    accHours[0][hrsType].filter(hrs => hrs).length > 0 &&
+    accHours[0][hrsType]
+      .filter(hrs => hrs)
+      .reduce((acc, cur) => {
+        const total = parseInt(acc) + parseInt(cur);
+        return total.toString();
+      });
+
+  return totalHours || "0";
+};
+
 const RoleOverview = ({ role, projects }) => {
-  // console.log(projects);
-
-  const roleHours = (role, data) => {
-    const { tasks, hours } = data;
-    const task = tasks.filter(task => task.role.includes(role));
-
-    const roleObj = [
-      ...task
-        .concat(hours)
-        .reduce(
-          (m, o) => m.set(o.roleID, Object.assign(m.get(o.roleID) || {}, o)),
-          new Map()
-        )
-        .values()
-    ][0];
-
-    return !Array.isArray(data) && roleObj;
-  };
-
   return (
     <Container>
       <header>
@@ -92,62 +135,86 @@ const RoleOverview = ({ role, projects }) => {
           {role}
           <br />
           <small style={{ fontSize: "65%" }}>
-            Total Scoped Hours: Total Logged Hours:
+            <span style={{ display: "inline-block" }}>
+              Total Scoped: {getRoleHoursTotal(role, projects, "hoursScoped")}
+              hrs
+            </span>{" "}
+            <span style={{ display: "inline-block" }}>
+              Total Logged: {getRoleHoursTotal(role, projects, "hoursLogged")}
+              hrs
+            </span>{" "}
+            <span style={{ display: "inline-block" }}>
+              Total Utilization:{" "}
+              {getRoleHoursTotal(role, projects, "hoursScoped") !== "0"
+                ? percentComplete(
+                    getRoleHoursTotal(role, projects, "hoursLogged"),
+                    getRoleHoursTotal(role, projects, "hoursScoped")
+                  )
+                : "--"}
+            </span>
           </small>
         </h2>
       </header>
-      <DataTable width="100%" border="0" cellPadding="5" cellSpacing="0">
-        <tbody>
-          <tr>
-            <DataTableHeading width="40%">Project:</DataTableHeading>
-            <DataTableHeading>Scoped Hours:</DataTableHeading>
-            <DataTableHeading>Logged Hours:</DataTableHeading>
-            <DataTableHeading>Remaining Hours:</DataTableHeading>
-            <DataTableHeading width="10%">Completed:</DataTableHeading>
-          </tr>
-          {projects
-            .sort((a, b) => (a.name > b.name ? 1 : -1))
-            .map(project => (
-              <DataTableRow key={project.id}>
-                <DataTableCell>{project.name}</DataTableCell>
-                <DataTableCell>
-                  {roleHours(role, project).hoursScoped
-                    ? roleHours(role, project).hoursScoped +
-                      setHrsLabel(roleHours(role, project).hoursScoped)
-                    : "Not Scoped"}
-                </DataTableCell>
-                <DataTableCell>
-                  {checkHoursLogged(roleHours(role, project).hoursLogged) +
-                    setHrsLabel(
-                      checkHoursLogged(roleHours(role, project).hoursLogged)
-                    )}
-                </DataTableCell>
-                <DataTableCell>
-                  {roleHours(role, project).hoursScoped
-                    ? roleHours(role, project).hoursScoped -
-                      checkHoursLogged(roleHours(role, project).hoursLogged) +
+      {projects.length === 0 ? (
+        <Message>No projects assigned</Message>
+      ) : (
+        <DataTable width="100%" border="0" cellPadding="5" cellSpacing="0">
+          <tbody>
+            <tr>
+              <DataTableHeading width="40%">Project:</DataTableHeading>
+              <DataTableHeading>Scoped:</DataTableHeading>
+              <DataTableHeading>Logged:</DataTableHeading>
+              <DataTableHeading>Remaining:</DataTableHeading>
+              <DataTableHeading width="10%">Utilized:</DataTableHeading>
+            </tr>
+            {projects
+              .sort((a, b) => (a.name > b.name ? 1 : -1))
+              .map(project => (
+                <DataTableRow key={project.id}>
+                  <DataTableCell>{project.name}</DataTableCell>
+                  <DataTableCell>
+                    {getRoleHours(role, project).hoursScoped
+                      ? getRoleHours(role, project).hoursScoped +
+                        setHrsLabel(getRoleHours(role, project).hoursScoped)
+                      : "Not Scoped"}
+                  </DataTableCell>
+                  <DataTableCell>
+                    {checkHoursLogged(getRoleHours(role, project).hoursLogged) +
                       setHrsLabel(
-                        roleHours(role, project).hoursScoped -
-                          checkHoursLogged(roleHours(role, project).hoursLogged)
-                      )
-                    : "-"}
-                </DataTableCell>
-                <DataTableCell>
-                  {roleHours(role, project).hoursScoped
-                    ? `${Math.round(
-                        (checkHoursLogged(
-                          roleHours(role, project).hoursLogged
-                        ) /
-                          roleHours(role, project).hoursScoped) *
-                          100 *
-                          10
-                      ) / 10}%`
-                    : "-"}
-                </DataTableCell>
-              </DataTableRow>
-            ))}
-        </tbody>
-      </DataTable>
+                        checkHoursLogged(
+                          getRoleHours(role, project).hoursLogged
+                        )
+                      )}
+                  </DataTableCell>
+                  <DataTableCell>
+                    {getRoleHours(role, project).hoursScoped
+                      ? getRoleHours(role, project).hoursScoped -
+                        checkHoursLogged(
+                          getRoleHours(role, project).hoursLogged
+                        ) +
+                        setHrsLabel(
+                          getRoleHours(role, project).hoursScoped -
+                            checkHoursLogged(
+                              getRoleHours(role, project).hoursLogged
+                            )
+                        )
+                      : "--"}
+                  </DataTableCell>
+                  <DataTableCell>
+                    {getRoleHours(role, project).hoursScoped
+                      ? percentComplete(
+                          checkHoursLogged(
+                            getRoleHours(role, project).hoursLogged
+                          ),
+                          getRoleHours(role, project).hoursScoped
+                        )
+                      : "--"}
+                  </DataTableCell>
+                </DataTableRow>
+              ))}
+          </tbody>
+        </DataTable>
+      )}
     </Container>
   );
 };

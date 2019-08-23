@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-import { checkHoursLogged, setHrsLabel } from "./utils";
+import { checkHoursLogged, setHrsLabel, percentComplete } from "./utils";
 
 const Message = styled.div`
   line-height: 0.85;
@@ -90,10 +90,10 @@ const Tasks = ({ project }) => {
       <tbody>
         <tr>
           <DataTableHeading width="40%">Role:</DataTableHeading>
-          <DataTableHeading>Scoped Hours:</DataTableHeading>
-          <DataTableHeading>Logged Hours:</DataTableHeading>
-          <DataTableHeading>Remaining Hours:</DataTableHeading>
-          <DataTableHeading width="10%">Completed:</DataTableHeading>
+          <DataTableHeading>Scoped:</DataTableHeading>
+          <DataTableHeading>Logged:</DataTableHeading>
+          <DataTableHeading>Remaining:</DataTableHeading>
+          <DataTableHeading width="10%">Utilized:</DataTableHeading>
         </tr>
         {tasksHours(project)
           .sort((a, b) => (a.role > b.role ? 1 : -1))
@@ -123,11 +123,10 @@ const Tasks = ({ project }) => {
               </DataTableCell>
               <DataTableCell>
                 {task.hoursScoped
-                  ? `${Math.round(
-                      (checkHoursLogged(task.hoursLogged) / task.hoursScoped) *
-                        100 *
-                        10
-                    ) / 10}%`
+                  ? percentComplete(
+                      checkHoursLogged(task.hoursLogged),
+                      task.hoursScoped
+                    )
                   : "--"}
               </DataTableCell>
             </DataTableRow>

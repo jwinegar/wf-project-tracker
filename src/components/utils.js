@@ -6,3 +6,7 @@ export const parseISODateString = string => {
 export const checkHoursLogged = hours => (hours ? hours : 0);
 export const setHrsLabel = hours =>
   hours === 1 || hours === -1 ? "hr" : "hrs";
+
+export const percentComplete = (val, total) => {
+  return `${Math.round((val / total) * 100 * 10) / 10}%`;
+};
