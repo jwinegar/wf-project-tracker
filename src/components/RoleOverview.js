@@ -165,7 +165,7 @@ const RoleOverview = ({ role, projects }) => {
               <DataTableHeading>Scoped:</DataTableHeading>
               <DataTableHeading>Logged:</DataTableHeading>
               <DataTableHeading>Remaining:</DataTableHeading>
-              <DataTableHeading width="10%">Utilized:</DataTableHeading>
+              <DataTableHeading width="12%">Utilization:</DataTableHeading>
             </tr>
             {projects
               .sort((a, b) => (a.name > b.name ? 1 : -1))

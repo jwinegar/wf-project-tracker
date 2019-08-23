@@ -93,7 +93,7 @@ const Tasks = ({ project }) => {
           <DataTableHeading>Scoped:</DataTableHeading>
           <DataTableHeading>Logged:</DataTableHeading>
           <DataTableHeading>Remaining:</DataTableHeading>
-          <DataTableHeading width="10%">Utilized:</DataTableHeading>
+          <DataTableHeading width="12%">Utilization:</DataTableHeading>
         </tr>
         {tasksHours(project)
           .sort((a, b) => (a.role > b.role ? 1 : -1))
