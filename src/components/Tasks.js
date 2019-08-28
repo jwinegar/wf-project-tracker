@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-import { checkHoursLogged, setHrsLabel, percentComplete } from "./utils";
+import { setHours, setHrsLabel, percentComplete } from "./utils";
 
 const Message = styled.div`
   line-height: 0.85;
@@ -13,6 +13,9 @@ const DataTable = styled.table`
   margin-top: 0.8125em;
 `;
 const DataTableHeading = styled.th`
+  position: sticky;
+  top: 0;
+  z-index: 1;
   vertical-align: bottom;
   white-space: nowrap;
   overflow: hidden;
@@ -20,7 +23,8 @@ const DataTableHeading = styled.th`
   text-align: left;
   font-size: 80%;
   line-height: 1;
-  padding: 2px 10px 5px;
+  padding: 10px;
+  background-color: white;
   border-bottom: solid 1px;
 `;
 const DataTableRow = styled.tr`
@@ -89,11 +93,11 @@ const Tasks = ({ project }) => {
     <DataTable width="100%" border="0" cellPadding="5" cellSpacing="0">
       <tbody>
         <tr>
-          <DataTableHeading width="40%">Role:</DataTableHeading>
-          <DataTableHeading>Scoped:</DataTableHeading>
-          <DataTableHeading>Logged:</DataTableHeading>
-          <DataTableHeading>Remaining:</DataTableHeading>
-          <DataTableHeading width="12%">Utilization:</DataTableHeading>
+          <DataTableHeading width="45%">Role:</DataTableHeading>
+          <DataTableHeading>Scoped Hours:</DataTableHeading>
+          <DataTableHeading>Logged Hours:</DataTableHeading>
+          <DataTableHeading>Remaining Hours:</DataTableHeading>
+          <DataTableHeading width="10%">% Complete:</DataTableHeading>
         </tr>
         {tasksHours(project)
           .sort((a, b) => (a.role > b.role ? 1 : -1))
@@ -109,22 +113,20 @@ const Tasks = ({ project }) => {
                   : "Not Scoped"}
               </DataTableCell>
               <DataTableCell>
-                {checkHoursLogged(task.hoursLogged) +
-                  setHrsLabel(checkHoursLogged(task.hoursLogged))}
+                {setHours(task.hoursLogged) +
+                  setHrsLabel(setHours(task.hoursLogged))}
               </DataTableCell>
               <DataTableCell>
                 {task.hoursScoped
                   ? task.hoursScoped -
-                    checkHoursLogged(task.hoursLogged) +
-                    setHrsLabel(
-                      task.hoursScoped - checkHoursLogged(task.hoursLogged)
-                    )
+                    setHours(task.hoursLogged) +
+                    setHrsLabel(task.hoursScoped - setHours(task.hoursLogged))
                   : "--"}
               </DataTableCell>
               <DataTableCell>
                 {task.hoursScoped
                   ? percentComplete(
-                      checkHoursLogged(task.hoursLogged),
+                      setHours(task.hoursLogged),
                       task.hoursScoped
                     )
                   : "--"}

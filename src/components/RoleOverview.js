@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-import { checkHoursLogged, setHrsLabel, percentComplete } from "./utils";
+import { setHours, setHrsLabel, percentComplete } from "./utils";
 
 const Container = styled.article`
   width: 100%;
@@ -11,6 +11,18 @@ const Container = styled.article`
 
   & + & {
     margin-top: 2em;
+  }
+`;
+const CalloutContainer = styled.div`
+  /* display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between; */
+`;
+const CalloutItem = styled.div`
+  display: inline-block;
+
+  &:not(:last-child) {
+    margin-right: 20px;
   }
 `;
 const Message = styled.div`
@@ -23,6 +35,9 @@ const DataTable = styled.table`
   margin-top: 0.8125em;
 `;
 const DataTableHeading = styled.th`
+  position: sticky;
+  top: 0;
+  z-index: 1;
   vertical-align: bottom;
   white-space: nowrap;
   overflow: hidden;
@@ -30,7 +45,8 @@ const DataTableHeading = styled.th`
   text-align: left;
   font-size: 80%;
   line-height: 1;
-  padding: 2px 10px 5px;
+  padding: 10px;
+  background-color: white;
   border-bottom: solid 1px;
 `;
 const DataTableRow = styled.tr`
@@ -134,25 +150,44 @@ const RoleOverview = ({ role, projects }) => {
         <h2>
           {role}
           <br />
-          <small style={{ fontSize: "65%" }}>
-            <span style={{ display: "inline-block" }}>
-              Total Scoped: {getRoleHoursTotal(role, projects, "hoursScoped")}
-              hrs
-            </span>{" "}
-            <span style={{ display: "inline-block" }}>
-              Total Logged: {getRoleHoursTotal(role, projects, "hoursLogged")}
-              hrs
-            </span>{" "}
-            <span style={{ display: "inline-block" }}>
-              Total Utilization:{" "}
-              {getRoleHoursTotal(role, projects, "hoursScoped") !== "0"
-                ? percentComplete(
-                    getRoleHoursTotal(role, projects, "hoursLogged"),
-                    getRoleHoursTotal(role, projects, "hoursScoped")
-                  )
-                : "--"}
-            </span>
-          </small>
+          <CalloutContainer>
+            <CalloutItem>
+              <CalloutItem>
+                <small style={{ fontSize: "65%" }}>
+                  Total Scoped Hours:{" "}
+                  {getRoleHoursTotal(role, projects, "hoursScoped") !== "0"
+                    ? getRoleHoursTotal(role, projects, "hoursScoped") +
+                      setHrsLabel(
+                        getRoleHoursTotal(role, projects, "hoursScoped")
+                      )
+                    : "--"}
+                </small>
+              </CalloutItem>
+              <CalloutItem>
+                <small style={{ fontSize: "65%" }}>
+                  Total Logged Hours:{" "}
+                  {getRoleHoursTotal(role, projects, "hoursScoped") !== "0" &&
+                  getRoleHoursTotal(role, projects, "hoursLogged")
+                    ? getRoleHoursTotal(role, projects, "hoursLogged") +
+                      setHrsLabel(
+                        getRoleHoursTotal(role, projects, "hoursLogged")
+                      )
+                    : "--"}
+                </small>
+              </CalloutItem>
+            </CalloutItem>
+            <CalloutItem>
+              <small style={{ fontSize: "65%" }}>
+                Total % Complete:{" "}
+                {getRoleHoursTotal(role, projects, "hoursScoped") !== "0"
+                  ? percentComplete(
+                      getRoleHoursTotal(role, projects, "hoursLogged"),
+                      getRoleHoursTotal(role, projects, "hoursScoped")
+                    )
+                  : "--"}
+              </small>
+            </CalloutItem>
+          </CalloutContainer>
         </h2>
       </header>
       {projects.length === 0 ? (
@@ -161,11 +196,11 @@ const RoleOverview = ({ role, projects }) => {
         <DataTable width="100%" border="0" cellPadding="5" cellSpacing="0">
           <tbody>
             <tr>
-              <DataTableHeading width="40%">Project:</DataTableHeading>
-              <DataTableHeading>Scoped:</DataTableHeading>
-              <DataTableHeading>Logged:</DataTableHeading>
-              <DataTableHeading>Remaining:</DataTableHeading>
-              <DataTableHeading width="12%">Utilization:</DataTableHeading>
+              <DataTableHeading width="45%">Project Name:</DataTableHeading>
+              <DataTableHeading>Scoped Hours:</DataTableHeading>
+              <DataTableHeading>Logged Hours:</DataTableHeading>
+              <DataTableHeading>Remaining Hours:</DataTableHeading>
+              <DataTableHeading width="12%">% Complete:</DataTableHeading>
             </tr>
             {projects
               .sort((a, b) => (a.name > b.name ? 1 : -1))
@@ -179,33 +214,25 @@ const RoleOverview = ({ role, projects }) => {
                       : "Not Scoped"}
                   </DataTableCell>
                   <DataTableCell>
-                    {checkHoursLogged(getRoleHours(role, project).hoursLogged) +
+                    {setHours(getRoleHours(role, project).hoursLogged) +
                       setHrsLabel(
-                        checkHoursLogged(
-                          getRoleHours(role, project).hoursLogged
-                        )
+                        setHours(getRoleHours(role, project).hoursLogged)
                       )}
                   </DataTableCell>
                   <DataTableCell>
                     {getRoleHours(role, project).hoursScoped
                       ? getRoleHours(role, project).hoursScoped -
-                        checkHoursLogged(
-                          getRoleHours(role, project).hoursLogged
-                        ) +
+                        setHours(getRoleHours(role, project).hoursLogged) +
                         setHrsLabel(
                           getRoleHours(role, project).hoursScoped -
-                            checkHoursLogged(
-                              getRoleHours(role, project).hoursLogged
-                            )
+                            setHours(getRoleHours(role, project).hoursLogged)
                         )
                       : "--"}
                   </DataTableCell>
                   <DataTableCell>
                     {getRoleHours(role, project).hoursScoped
                       ? percentComplete(
-                          checkHoursLogged(
-                            getRoleHours(role, project).hoursLogged
-                          ),
+                          setHours(getRoleHours(role, project).hoursLogged),
                           getRoleHours(role, project).hoursScoped
                         )
                       : "--"}
