@@ -33,7 +33,7 @@ const Message = styled.div`
 `;
 const Container = styled.main`
   width: 100%;
-  padding: 2.5em 4.2667%;
+  padding: 0 4.2667% 3.5em;
 
   & > * + * {
     margin-top: 2em;
@@ -104,6 +104,8 @@ const ProjectsList = () => {
       .filter(project =>
         program ? project.program.includes(program) : project
       )
+      // sort projects by name
+      .sort((a, b) => (a.name > b.name ? -1 : 1))
       // sort projects by expiration: closest to furthest
       .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1));
 

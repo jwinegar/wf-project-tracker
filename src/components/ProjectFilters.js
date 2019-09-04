@@ -12,6 +12,10 @@ const MainHeader = styled.header`
   background-color: rgba(0, 0, 0, 0.075);
   border-bottom: solid 1px rgba(0, 0, 0, 0.075);
 `;
+const Container = styled.div`
+  width: 100%;
+  padding: 1em 4.2667%;
+`;
 const Input = styled.input`
   width: 100%;
   border: none;
@@ -80,6 +84,39 @@ const ClearInput = styled.span`
   }
 `;
 
+const updateActiveFilter = (inputName, filterType) => {
+  const inputs = document.getElementsByName(inputName);
+  let activeFilter;
+
+  if (!filterType) {
+    inputs.forEach(input => {
+      input.classList.remove("active");
+      input.disabled = false;
+    });
+    return;
+  }
+  activeFilter = [...inputs].find(input => input.value === filterType);
+
+  inputs.forEach(input => {
+    input.classList.remove("active");
+    input.disabled = false;
+  });
+  activeFilter.classList.add("active");
+  activeFilter.disabled = true;
+};
+
+const activeFiltersArr = (...filters) => {
+  const activeArr = [];
+
+  filters.forEach(filter => {
+    if (!!filter) {
+      filter && activeArr.push(filter);
+    }
+  });
+
+  return activeArr;
+};
+
 const ProjectFilters = ({
   projects,
   updateProjectFilter,
@@ -92,18 +129,6 @@ const ProjectFilters = ({
   const [clientFilter, setClientFilter] = useState("");
   const [programFilter, setProgramFilter] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
-
-  const updateActiveFilter = (inputName, filterType) => {
-    const inputs = document.getElementsByName(inputName);
-    const activeFilter = [...inputs].find(input => input.value === filterType);
-
-    inputs.forEach(input => {
-      input.classList.remove("active");
-      input.disabled = false;
-    });
-    activeFilter.classList.add("active");
-    activeFilter.disabled = true;
-  };
 
   const programs = projects
     .filter(project => project.program)
@@ -126,6 +151,13 @@ const ProjectFilters = ({
   const roles = [...tasks, ...hours]
     .filter((role, index) => [...tasks, ...hours].indexOf(role) === index)
     .sort();
+
+  const resetFilters = () => {
+    !!projectFilter && setProjectFilter("");
+    !!clientFilter && setClientFilter("");
+    !!programFilter && setProgramFilter("");
+    !!roleFilter && setRoleFilter("");
+  };
 
   useEffect(() => {
     updateProjectFilter(projectFilter);
@@ -150,113 +182,150 @@ const ProjectFilters = ({
   }, [roleFilter, updateRoleFilter]);
 
   return (
-    <MainHeader>
-      <SearchField>
-        <Input
-          type="text"
-          placeholder="Search Projects"
-          value={projectFilter}
-          onKeyDown={e => e.keyCode === 27 && setProjectFilter("")}
-          onChange={e => setProjectFilter(e.currentTarget.value)}
-        />
-        {projectFilter && <ClearInput onClick={e => setProjectFilter("")} />}
-      </SearchField>
-      <div>
-        <span>
-          <small>Client:</small>
-        </span>{" "}
-        <span>
-          <Button
-            name="client"
-            value=""
-            onClick={e => {
-              setClientFilter(e.currentTarget.value);
-            }}
-          >
-            All
-          </Button>
-          <Button
-            name="client"
-            value="HMA"
-            onClick={e => {
-              setClientFilter(e.currentTarget.value);
-            }}
-          >
-            HMA
-          </Button>
-          <Button
-            name="client"
-            value="GMA"
-            onClick={e => {
-              setClientFilter(e.currentTarget.value);
-            }}
-          >
-            GMA
-          </Button>
-        </span>
-      </div>
-      <div>
-        <span>
-          <small>Program:</small>
-        </span>{" "}
-        <span>
-          <Button
-            name="program"
-            value=""
-            onClick={e => {
-              setProgramFilter(e.currentTarget.value);
-            }}
-          >
-            All
-          </Button>
-          {programs.map((program, index) => (
+    <>
+      <MainHeader>
+        <SearchField>
+          <Input
+            type="text"
+            placeholder="Search Projects"
+            value={projectFilter}
+            onKeyDown={e => e.keyCode === 27 && setProjectFilter("")}
+            onChange={e => setProjectFilter(e.currentTarget.value)}
+          />
+          {projectFilter && <ClearInput onClick={e => setProjectFilter("")} />}
+        </SearchField>
+        <div>
+          <span>
+            <small>Client:</small>
+          </span>{" "}
+          <span>
             <Button
-              key={index}
-              name="program"
-              value={program}
+              type="button"
+              name="client"
+              value="HMA"
               onClick={e => {
-                setProgramFilter(e.currentTarget.value);
+                setClientFilter(e.currentTarget.value);
               }}
             >
-              {program}
+              HMA
             </Button>
-          ))}
-        </span>
-      </div>
-      <div>
-        <span>
-          <small>Role:</small>
-        </span>{" "}
-        <span>
-          <Button
-            name="role"
-            value=""
-            onClick={e => {
-              setRoleFilter(e.currentTarget.value);
-            }}
-          >
-            All
-          </Button>
-          {roles.map((role, index) => (
             <Button
-              key={index}
-              name="role"
-              value={role}
+              type="button"
+              name="client"
+              value="GMA"
               onClick={e => {
-                setRoleFilter(e.currentTarget.value);
+                setClientFilter(e.currentTarget.value);
               }}
             >
-              {role}
+              GMA
             </Button>
-          ))}
-        </span>
-      </div>
-      <div>
-        <small>
-          {filteredProjectsCount} of {projects.length} projects showing
-        </small>
-      </div>
-    </MainHeader>
+          </span>
+        </div>
+        <div>
+          <span>
+            <small>Program:</small>
+          </span>{" "}
+          <span>
+            {programs.map((program, index) => (
+              <Button
+                type="button"
+                key={index}
+                name="program"
+                value={program}
+                onClick={e => {
+                  setProgramFilter(e.currentTarget.value);
+                }}
+              >
+                {program}
+              </Button>
+            ))}
+          </span>
+        </div>
+        <div>
+          <span>
+            <small>Role:</small>
+          </span>{" "}
+          <span>
+            {roles.map((role, index) => (
+              <Button
+                type="button"
+                key={index}
+                name="role"
+                value={role}
+                onClick={e => {
+                  setRoleFilter(e.currentTarget.value);
+                }}
+              >
+                {role}
+              </Button>
+            ))}
+          </span>
+        </div>
+        <div style={{ paddingTop: "0.5em" }}>
+          <small>
+            {filteredProjectsCount} of {projects.length} projects showing
+          </small>
+        </div>
+      </MainHeader>
+      <Container>
+        <div style={{ height: "1.3496125em", lineHeight: "0.85" }}>
+          {!!activeFiltersArr(clientFilter, programFilter, roleFilter)
+            .length && (
+            <>
+              <span>
+                <small>Filters:</small>
+              </span>{" "}
+              {!!clientFilter && (
+                <Button
+                  type="button"
+                  name="filter"
+                  value=""
+                  onClick={e => {
+                    setClientFilter(e.currentTarget.value);
+                  }}
+                >
+                  {clientFilter} &nbsp;&times;
+                </Button>
+              )}
+              {!!programFilter && (
+                <Button
+                  type="button"
+                  name="filter"
+                  value=""
+                  onClick={e => {
+                    setProgramFilter(e.currentTarget.value);
+                  }}
+                >
+                  {programFilter} &nbsp;&times;
+                </Button>
+              )}
+              {!!roleFilter && (
+                <Button
+                  type="button"
+                  name="filter"
+                  value=""
+                  onClick={e => {
+                    setRoleFilter(e.currentTarget.value);
+                  }}
+                >
+                  {roleFilter} &nbsp;&times;
+                </Button>
+              )}
+              <Button
+                type="button"
+                name="filter"
+                value=""
+                onClick={e => {
+                  resetFilters();
+                }}
+              >
+                Clear All
+              </Button>
+            </>
+          )}
+        </div>
+      </Container>
+    </>
   );
 };
 
