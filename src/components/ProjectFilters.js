@@ -273,7 +273,7 @@ const ProjectFilters = ({
             .length && (
             <>
               <span>
-                <small>Filters:</small>
+                <small>Filters ({filteredProjectsCount} results):</small>
               </span>{" "}
               {!!clientFilter && (
                 <Button
@@ -318,6 +318,7 @@ const ProjectFilters = ({
                 onClick={e => {
                   resetFilters();
                 }}
+                style={{ backgroundColor: "transparent", border: "none" }}
               >
                 Clear All
               </Button>
