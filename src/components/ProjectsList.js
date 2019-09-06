@@ -104,7 +104,7 @@ const ProjectsList = () => {
       .filter(project =>
         program ? project.program.includes(program) : project
       )
-      // sort projects by name
+      // sort projects by name alphabetically
       .sort((a, b) => (a.name > b.name ? -1 : 1))
       // sort projects by expiration: closest to furthest
       .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1));

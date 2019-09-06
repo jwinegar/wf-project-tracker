@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-import { setHours, setHrsLabel, percentComplete } from "./utils";
+import { setHours, setHrsLabel, setDaysLeft, percentComplete } from "./utils";
 
 const Container = styled.article`
   width: 100%;
@@ -144,6 +144,8 @@ const getRoleHoursTotal = (role, dataArr, hrsType) => {
 };
 
 const RoleOverview = ({ role, projects }) => {
+  console.log(projects);
+
   return (
     <Container>
       <header>
@@ -197,16 +199,21 @@ const RoleOverview = ({ role, projects }) => {
           <tbody>
             <tr>
               <DataTableHeading width="45%">Project Name:</DataTableHeading>
+              <DataTableHeading>Days Remaining:</DataTableHeading>
               <DataTableHeading>Scoped Hours:</DataTableHeading>
               <DataTableHeading>Logged Hours:</DataTableHeading>
               <DataTableHeading>Remaining Hours:</DataTableHeading>
               <DataTableHeading width="12%">% Complete:</DataTableHeading>
             </tr>
             {projects
-              .sort((a, b) => (a.name > b.name ? 1 : -1))
+              .sort((a, b) => (a.name > b.name ? -1 : 1))
+              .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1))
               .map(project => (
                 <DataTableRow key={project.id}>
                   <DataTableCell>{project.name}</DataTableCell>
+                  <DataTableCell>
+                    {setDaysLeft(project.expireDate)}
+                  </DataTableCell>
                   <DataTableCell>
                     {getRoleHours(role, project).hoursScoped
                       ? getRoleHours(role, project).hoursScoped +

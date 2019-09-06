@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-import { parseISODateString } from "./utils";
+import { setExpiring } from "./utils";
 import Tasks from "./Tasks";
 
 const Container = styled.article`
@@ -13,25 +13,6 @@ const Container = styled.article`
 
 const Project = ({ project }) => {
   const { name, program, expireDate } = project;
-  const setExpiring = expireDate => {
-    const dayDiff =
-      parseISODateString(expireDate).getTime() - new Date().getTime();
-    const daysLeft = Math.floor(dayDiff / 8.64e7);
-    let relDays;
-
-    switch (true) {
-      case daysLeft === 0:
-        relDays = "Today";
-        break;
-      case daysLeft === 1:
-        relDays = "Tomorrow";
-        break;
-      default:
-        relDays = `in ${daysLeft} Days`;
-    }
-
-    return relDays;
-  };
 
   return (
     <Container>
