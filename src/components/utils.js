@@ -8,7 +8,7 @@ export const setDaysLeft = expireDate => {
     parseISODateString(expireDate).getTime() - new Date().getTime();
   const daysLeft = Math.floor(dayDiff / 8.64e7);
 
-  return daysLeft === 1 ? daysLeft + " Day" : daysLeft + " Days";
+  return daysLeft === 1 ? `${daysLeft} Day` : `${daysLeft} Days`;
 };
 
 export const setExpiring = expireDate => {

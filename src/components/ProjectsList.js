@@ -93,9 +93,7 @@ const ProjectsList = () => {
   const filterProjects = projects =>
     projects
       // filter by client
-      .filter(project =>
-        project.name.toLowerCase().includes(client.toLowerCase())
-      )
+      .filter(project => project.name.includes(client))
       // filter by project name
       .filter(project =>
         project.name.toLowerCase().includes(projectName.toLowerCase())
