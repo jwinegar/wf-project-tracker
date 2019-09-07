@@ -1,88 +1,144 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useCallback } from "react";
+import { useQuery } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
-import { ProjectsContext } from "../contexts/projectsContext";
 
 import ProjectFilters from "./ProjectFilters";
-import ProjectContent from "./ProjectContent";
+import Project from "./Project";
+import RoleOverview from "./RoleOverview";
+
+const PROJECTS_QUERY = gql`
+  query projectsQuery {
+    projects {
+      id
+      name
+      program
+      expireDate
+      tasks {
+        roleID
+        role
+        hoursScoped
+      }
+      hours {
+        roleID
+        role
+        hoursLogged
+      }
+    }
+  }
+`;
 
 const Message = styled.div`
   padding: 1.25em 4.2667%;
 `;
-const ListingContainer = styled.main`
+const Container = styled.main`
   width: 100%;
-  padding: 2.5em 4.2667%;
-`;
-const Project = styled.article`
-  width: 100%;
-  padding: 1.5em 2em 2em;
-  background-color: white;
-  border-radius: 5px;
+  padding: 0 4.2667% 3.5em;
 
-  & + & {
+  & > * + * {
     margin-top: 2em;
   }
 `;
 
 const ProjectsList = () => {
-  const [projects, setLoadingProjects] = useContext(ProjectsContext);
-  const [projectFilters, setProjectFilters] = useState({
+  const { data, loading, error } = useQuery(PROJECTS_QUERY);
+
+  const [filters, setFilters] = useState({
     projectName: "",
     client: "",
-    program: ""
+    program: "",
+    role: ""
   });
+  const { projectName, client, program } = filters;
 
-  const filteredProjects = projects
-    .filter(project =>
-      project.name.toLowerCase().includes(projectFilters.client.toLowerCase())
-    )
-    .filter(project =>
-      project.name
-        .toLowerCase()
-        .includes(projectFilters.projectName.toLowerCase())
-    )
-    .filter(project =>
-      !!projectFilters.program
-        ? (project["DE:Wun LA Program for Innocean HMA"] ||
-            project["DE:Wun LA Program for Innocean GMA"]) &&
-          (
-            project["DE:Wun LA Program for Innocean HMA"] ||
-            project["DE:Wun LA Program for Innocean GMA"]
-          ).includes(projectFilters.program)
-        : project
-    );
+  const updateProjectFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, projectName: val };
+      });
+    },
+    [setFilters]
+  );
+  const updateClientFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, client: val };
+      });
+    },
+    [setFilters]
+  );
+  const updateProgramFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, program: val };
+      });
+    },
+    [setFilters]
+  );
+  const updateRoleFilter = useCallback(
+    val => {
+      setFilters(f => {
+        return { ...f, role: val };
+      });
+    },
+    [setFilters]
+  );
 
-  const updateClientFilter = client => {
-    setProjectFilters({ ...projectFilters, client });
-  };
-  const updateProjectFilter = projectName => {
-    setProjectFilters({ ...projectFilters, projectName });
-  };
-  const updateProgramFilter = program => {
-    setProjectFilters({ ...projectFilters, program });
-  };
+  // get list of projects by role
+  const getProjectsByRole = (data, role) =>
+    role
+      ? data.filter(project => project.tasks.some(task => task.role === role))
+      : data;
+
+  const filterProjects = projects =>
+    projects
+      // filter by client
+      .filter(project => project.name.includes(client))
+      // filter by project name
+      .filter(project =>
+        project.name.toLowerCase().includes(projectName.toLowerCase())
+      )
+      // filter by program
+      .filter(project =>
+        program ? project.program.includes(program) : project
+      )
+      // sort projects by name alphabetically
+      .sort((a, b) => (a.name > b.name ? -1 : 1))
+      // sort projects by expiration: closest to furthest
+      .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1));
+
+  if (loading) return <Message>Loading Projects...</Message>;
+  if (error) return <Message>{error.message}</Message>;
+  if (!data || !data.projects) return <Message>No projects found</Message>;
 
   return (
-    <React.Fragment>
+    <>
       <ProjectFilters
-        filteredProjectsCount={filteredProjects.length}
-        updateClientFilter={updateClientFilter}
+        projects={data.projects}
         updateProjectFilter={updateProjectFilter}
+        updateClientFilter={updateClientFilter}
         updateProgramFilter={updateProgramFilter}
+        updateRoleFilter={updateRoleFilter}
+        filteredProjectsCount={
+          getProjectsByRole(filterProjects(data.projects), filters.role).length
+        }
       />
-      {setLoadingProjects ? (
-        <Message>Loading Projects...</Message>
-      ) : filteredProjects.length > 0 ? (
-        <ListingContainer className="projects">
-          {filteredProjects.map(project => (
-            <Project className="project" key={project.ID}>
-              <ProjectContent project={project} />
-            </Project>
-          ))}
-        </ListingContainer>
-      ) : (
-        <Message>No projects at this time</Message>
-      )}
-    </React.Fragment>
+      <Container>
+        {filters.role ? (
+          <RoleOverview
+            role={filters.role}
+            projects={getProjectsByRole(
+              filterProjects(data.projects),
+              filters.role
+            )}
+          />
+        ) : (
+          filterProjects(data.projects).map(project => (
+            <Project key={project.id} project={project} />
+          ))
+        )}
+      </Container>
+    </>
   );
 };
 
