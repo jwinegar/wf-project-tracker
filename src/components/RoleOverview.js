@@ -144,8 +144,6 @@ const getRoleHoursTotal = (role, dataArr, hrsType) => {
 };
 
 const RoleOverview = ({ role, projects }) => {
-  console.log(projects);
-
   return (
     <Container>
       <header>

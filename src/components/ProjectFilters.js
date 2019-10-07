@@ -25,7 +25,7 @@ const Input = styled.input`
 const Button = styled.button`
   border: solid 1px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  padding: 0.25em 0.55em 0.35em;
+  padding: 0.5em 0.65em 0.65em;
   background-color: rgba(255, 255, 255, 0.35);
   transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 

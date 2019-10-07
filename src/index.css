@@ -69,7 +69,17 @@ code {
     monospace;
 }
 
-button {
+button[class],
+input[class],
+select[class] {
+  font-size: 0.6875em;
+  line-height: 0.8;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -79,36 +89,56 @@ button {
   border-radius: 0;
 }
 
-ul[class*="listing"],
-ol[class*="listing"] {
+ul[class],
+ol[class] {
   list-style: none;
   margin-top: 0; 
 }
-ul[class*="listing"] li,
-ol[class*="listing"] li {
+ul[class] li,
+ol[class] li {
   position: relative; 
 }
 
-ul[class*="listing"] li {
+ul[class] li {
   padding-left: 1.25em; 
 }
-ul[class*="listing"] li:before {
+ul[class] li:before {
   content: '\2022';
   position: absolute;
   left: 0.4375em; 
 }
 
-ol[class*="listing"] {
+ol[class] {
   counter-reset: num-list; 
 }
-ol[class*="listing"] li {
+ol[class] li {
   padding-left: 2em; 
 }
-ol[class*="listing"] li:before {
+ol[class] li:before {
   counter-increment: num-list;
   content: counter(num-list) ".";
   position: absolute;
   left: 0;
   width: 1.625em;
   text-align: right; 
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
