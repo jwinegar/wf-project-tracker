@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import styled from "styled-components/macro";
+import {
+  ClientContext,
+  ProgramContext,
+  ProjectNameContext,
+  RoleContext
+} from "../globalState";
 
 // TODO: Create Styled Theme
 const color = {
@@ -117,18 +123,13 @@ const activeFiltersArr = (...filters) => {
   return activeArr;
 };
 
-const ProjectFilters = ({
-  projects,
-  updateProjectFilter,
-  updateClientFilter,
-  updateProgramFilter,
-  updateRoleFilter,
-  filteredProjectsCount
-}) => {
-  const [projectFilter, setProjectFilter] = useState("");
-  const [clientFilter, setClientFilter] = useState("");
-  const [programFilter, setProgramFilter] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
+const ProjectFilters = ({ projects, filteredProjectsCount }) => {
+  const [filterClient, setFilterClient] = useContext(ClientContext);
+  const [filterProgram, setFilterProgram] = useContext(ProgramContext);
+  const [filterProjectName, setFilterProjectName] = useContext(
+    ProjectNameContext
+  );
+  const [filterRole, setFilterRole] = useContext(RoleContext);
 
   const programs = projects
     .filter(project => project.program)
@@ -153,33 +154,23 @@ const ProjectFilters = ({
     .sort();
 
   const resetFilters = () => {
-    !!projectFilter && setProjectFilter("");
-    !!clientFilter && setClientFilter("");
-    !!programFilter && setProgramFilter("");
-    !!roleFilter && setRoleFilter("");
+    !!filterProjectName && setFilterProjectName("");
+    !!filterClient && setFilterClient("");
+    !!filterProgram && setFilterProgram("");
+    !!filterRole && setFilterRole("");
   };
 
   useEffect(() => {
-    updateProjectFilter(projectFilter);
-  }, [projectFilter, updateProjectFilter]);
+    updateActiveFilter("client", filterClient);
+  }, [filterClient]);
 
   useEffect(() => {
-    updateClientFilter(clientFilter);
-
-    updateActiveFilter("client", clientFilter);
-  }, [clientFilter, updateClientFilter]);
+    updateActiveFilter("program", filterProgram);
+  }, [filterProgram]);
 
   useEffect(() => {
-    updateProgramFilter(programFilter);
-
-    updateActiveFilter("program", programFilter);
-  }, [programFilter, updateProgramFilter]);
-
-  useEffect(() => {
-    updateRoleFilter(roleFilter);
-
-    updateActiveFilter("role", roleFilter);
-  }, [roleFilter, updateRoleFilter]);
+    updateActiveFilter("role", filterRole);
+  }, [filterRole]);
 
   return (
     <>
@@ -188,11 +179,13 @@ const ProjectFilters = ({
           <Input
             type="text"
             placeholder="Search Projects"
-            value={projectFilter}
-            onKeyDown={e => e.keyCode === 27 && setProjectFilter("")}
-            onChange={e => setProjectFilter(e.currentTarget.value)}
+            value={filterProjectName}
+            onKeyDown={e => e.keyCode === 27 && setFilterProjectName("")}
+            onChange={e => setFilterProjectName(e.currentTarget.value)}
           />
-          {projectFilter && <ClearInput onClick={e => setProjectFilter("")} />}
+          {filterProjectName && (
+            <ClearInput onClick={e => setFilterProjectName("")} />
+          )}
         </SearchField>
         <div>
           <span>
@@ -204,7 +197,7 @@ const ProjectFilters = ({
               name="client"
               value="HMA"
               onClick={e => {
-                setClientFilter(e.currentTarget.value);
+                setFilterClient(e.currentTarget.value);
               }}
             >
               HMA
@@ -214,7 +207,7 @@ const ProjectFilters = ({
               name="client"
               value="GMA"
               onClick={e => {
-                setClientFilter(e.currentTarget.value);
+                setFilterClient(e.currentTarget.value);
               }}
             >
               GMA
@@ -233,7 +226,7 @@ const ProjectFilters = ({
                 name="program"
                 value={program}
                 onClick={e => {
-                  setProgramFilter(e.currentTarget.value);
+                  setFilterProgram(e.currentTarget.value);
                 }}
               >
                 {program}
@@ -253,7 +246,7 @@ const ProjectFilters = ({
                 name="role"
                 value={role}
                 onClick={e => {
-                  setRoleFilter(e.currentTarget.value);
+                  setFilterRole(e.currentTarget.value);
                 }}
               >
                 {role}
@@ -269,46 +262,46 @@ const ProjectFilters = ({
       </MainHeader>
       <Container>
         <div style={{ height: "1.3496125em", lineHeight: "0.85" }}>
-          {!!activeFiltersArr(clientFilter, programFilter, roleFilter)
+          {!!activeFiltersArr(filterClient, filterProgram, filterRole)
             .length && (
             <>
               <span>
                 <small>Filters ({filteredProjectsCount} results):</small>
               </span>{" "}
-              {!!clientFilter && (
+              {!!filterClient && (
                 <Button
                   type="button"
                   name="filter"
                   value=""
                   onClick={e => {
-                    setClientFilter(e.currentTarget.value);
+                    setFilterClient(e.currentTarget.value);
                   }}
                 >
-                  {clientFilter} &nbsp;&times;
+                  {filterClient} &nbsp;&times;
                 </Button>
               )}
-              {!!programFilter && (
+              {!!filterProgram && (
                 <Button
                   type="button"
                   name="filter"
                   value=""
                   onClick={e => {
-                    setProgramFilter(e.currentTarget.value);
+                    setFilterProgram(e.currentTarget.value);
                   }}
                 >
-                  {programFilter} &nbsp;&times;
+                  {filterProgram} &nbsp;&times;
                 </Button>
               )}
-              {!!roleFilter && (
+              {!!filterRole && (
                 <Button
                   type="button"
                   name="filter"
                   value=""
                   onClick={e => {
-                    setRoleFilter(e.currentTarget.value);
+                    setFilterRole(e.currentTarget.value);
                   }}
                 >
-                  {roleFilter} &nbsp;&times;
+                  {filterRole} &nbsp;&times;
                 </Button>
               )}
               <Button

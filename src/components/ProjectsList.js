@@ -1,7 +1,14 @@
-import React, { useState, useCallback } from "react";
+import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
+
+import {
+  ClientContext,
+  ProgramContext,
+  ProjectNameContext,
+  RoleContext
+} from "../globalState";
 
 import ProjectFilters from "./ProjectFilters";
 import Project from "./Project";
@@ -43,46 +50,10 @@ const Container = styled.main`
 const ProjectsList = () => {
   const { data, loading, error } = useQuery(PROJECTS_QUERY);
 
-  const [filters, setFilters] = useState({
-    projectName: "",
-    client: "",
-    program: "",
-    role: ""
-  });
-  const { projectName, client, program } = filters;
-
-  const updateProjectFilter = useCallback(
-    val => {
-      setFilters(f => {
-        return { ...f, projectName: val };
-      });
-    },
-    [setFilters]
-  );
-  const updateClientFilter = useCallback(
-    val => {
-      setFilters(f => {
-        return { ...f, client: val };
-      });
-    },
-    [setFilters]
-  );
-  const updateProgramFilter = useCallback(
-    val => {
-      setFilters(f => {
-        return { ...f, program: val };
-      });
-    },
-    [setFilters]
-  );
-  const updateRoleFilter = useCallback(
-    val => {
-      setFilters(f => {
-        return { ...f, role: val };
-      });
-    },
-    [setFilters]
-  );
+  const [filterClient] = useContext(ClientContext);
+  const [filterProgram] = useContext(ProgramContext);
+  const [filterProjectName] = useContext(ProjectNameContext);
+  const [filterRole] = useContext(RoleContext);
 
   // get list of projects by role
   const getProjectsByRole = (data, role) =>
@@ -93,14 +64,14 @@ const ProjectsList = () => {
   const filterProjects = projects =>
     projects
       // filter by client
-      .filter(project => project.name.includes(client))
+      .filter(project => project.name.includes(filterClient))
       // filter by project name
       .filter(project =>
-        project.name.toLowerCase().includes(projectName.toLowerCase())
+        project.name.toLowerCase().includes(filterProjectName.toLowerCase())
       )
       // filter by program
       .filter(project =>
-        program ? project.program.includes(program) : project
+        filterProgram ? project.program.includes(filterProgram) : project
       )
       // sort projects by name alphabetically
       .sort((a, b) => (a.name > b.name ? -1 : 1))
@@ -115,21 +86,17 @@ const ProjectsList = () => {
     <>
       <ProjectFilters
         projects={data.projects}
-        updateProjectFilter={updateProjectFilter}
-        updateClientFilter={updateClientFilter}
-        updateProgramFilter={updateProgramFilter}
-        updateRoleFilter={updateRoleFilter}
         filteredProjectsCount={
-          getProjectsByRole(filterProjects(data.projects), filters.role).length
+          getProjectsByRole(filterProjects(data.projects), filterRole).length
         }
       />
       <Container>
-        {filters.role ? (
+        {filterRole ? (
           <RoleOverview
-            role={filters.role}
+            role={filterRole}
             projects={getProjectsByRole(
               filterProjects(data.projects),
-              filters.role
+              filterRole
             )}
           />
         ) : (
