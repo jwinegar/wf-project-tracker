@@ -1,10 +1,5 @@
 import React, { cloneElement } from "react";
-import {
-  ClientProvider,
-  ProgramProvider,
-  ProjectNameProvider,
-  RoleProvider
-} from "./index";
+import { FiltersProvider } from "./index";
 
 const ProviderComposer = ({ contexts, children }) =>
   contexts.reduceRight(
@@ -16,14 +11,7 @@ const ProviderComposer = ({ contexts, children }) =>
   );
 
 const ContextProvider = ({ children }) => (
-  <ProviderComposer
-    contexts={[
-      <ClientProvider />,
-      <ProjectNameProvider />,
-      <ProgramProvider />,
-      <RoleProvider />
-    ]}
-  >
+  <ProviderComposer contexts={[<FiltersProvider />]}>
     {children}
   </ProviderComposer>
 );

@@ -3,12 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
 
-import {
-  ClientContext,
-  ProgramContext,
-  ProjectNameContext,
-  RoleContext
-} from "../globalState";
+import { FiltersContext } from "../globalState";
 
 import ProjectFilters from "./ProjectFilters";
 import Project from "./Project";
@@ -38,7 +33,7 @@ const PROJECTS_QUERY = gql`
 const Message = styled.div`
   padding: 1.25em 4.2667%;
 `;
-const Container = styled.main`
+const MainContainer = styled.main`
   width: 100%;
   padding: 0 4.2667% 3.5em;
 
@@ -50,10 +45,13 @@ const Container = styled.main`
 const ProjectsList = () => {
   const { data, loading, error } = useQuery(PROJECTS_QUERY);
 
-  const [filterClient] = useContext(ClientContext);
-  const [filterProgram] = useContext(ProgramContext);
-  const [filterProjectName] = useContext(ProjectNameContext);
-  const [filterRole] = useContext(RoleContext);
+  const {
+    filterClient,
+    filterProgram,
+    filterProjectName,
+    filterRole,
+    setFilteredProjectCount
+  } = useContext(FiltersContext);
 
   // get list of projects by role
   const getProjectsByRole = (data, role) =>
@@ -82,15 +80,14 @@ const ProjectsList = () => {
   if (error) return <Message>{error.message}</Message>;
   if (!data || !data.projects) return <Message>No projects found</Message>;
 
+  setFilteredProjectCount(
+    getProjectsByRole(filterProjects(data.projects), filterRole).length
+  );
+
   return (
     <>
-      <ProjectFilters
-        projects={data.projects}
-        filteredProjectsCount={
-          getProjectsByRole(filterProjects(data.projects), filterRole).length
-        }
-      />
-      <Container>
+      <ProjectFilters totalProjectsCount={data.projects.length} />
+      <MainContainer>
         {filterRole ? (
           <RoleOverview
             role={filterRole}
@@ -104,7 +101,7 @@ const ProjectsList = () => {
             <Project key={project.id} project={project} />
           ))
         )}
-      </Container>
+      </MainContainer>
     </>
   );
 };
