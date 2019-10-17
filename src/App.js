@@ -2,6 +2,7 @@ import React from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 
+import ProjectFilters from "./components/ProjectFilters";
 import ProjectsList from "./components/ProjectsList";
 import { ContextProvider } from "./globalState/state";
 
@@ -13,6 +14,7 @@ const App = () => (
   <ApolloProvider client={client}>
     <ContextProvider>
       <div className="App">
+        <ProjectFilters />
         <ProjectsList />
       </div>
     </ContextProvider>

@@ -6,7 +6,7 @@ import { FiltersContext } from "../globalState";
 import { Button } from "./globalStyledComponents";
 
 const PROGRAMS_QUERY = gql`
-  query projectsQuery {
+  query programsQuery {
     projects {
       program
     }
@@ -15,7 +15,7 @@ const PROGRAMS_QUERY = gql`
 
 const ProgramFilters = () => {
   const { data, loading, error } = useQuery(PROGRAMS_QUERY);
-  const { setFilterProgram } = useContext(FiltersContext);
+  const { filterProgram, setFilterProgram } = useContext(FiltersContext);
 
   if (loading)
     return (
@@ -55,6 +55,7 @@ const ProgramFilters = () => {
           key={index}
           name="program"
           value={program}
+          className={filterProgram === program && "active"}
           onClick={e => {
             setFilterProgram(e.currentTarget.value);
           }}

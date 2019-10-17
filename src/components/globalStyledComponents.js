@@ -4,11 +4,6 @@ const color = {
   primary: "#007BC5"
 };
 
-export const Container = styled.div`
-  width: 100%;
-  padding: 1em 4.2667%;
-`;
-
 export const Button = styled.button`
   border: solid 1px rgba(0, 0, 0, 0.1);
   border-radius: 5px;

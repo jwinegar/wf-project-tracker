@@ -6,7 +6,7 @@ import { Button } from "./globalStyledComponents";
 const clientArr = ["HMA", "GMA"];
 
 const ClientFilters = () => {
-  const { setFilterClient } = useContext(FiltersContext);
+  const { filterClient, setFilterClient } = useContext(FiltersContext);
 
   return (
     <span>
@@ -16,6 +16,7 @@ const ClientFilters = () => {
           key={index}
           name="client"
           value={client}
+          className={filterClient === client && "active"}
           onClick={e => {
             setFilterClient(e.currentTarget.value);
           }}

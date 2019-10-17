@@ -6,7 +6,7 @@ import { FiltersContext } from "../globalState";
 import { Button } from "./globalStyledComponents";
 
 const ROLES_QUERY = gql`
-  query projectsQuery {
+  query rolesQuery {
     projects {
       tasks {
         role
@@ -20,7 +20,7 @@ const ROLES_QUERY = gql`
 
 const RoleFilters = () => {
   const { data, loading, error } = useQuery(ROLES_QUERY);
-  const { setFilterRole } = useContext(FiltersContext);
+  const { filterRole, setFilterRole } = useContext(FiltersContext);
 
   if (loading)
     return (
@@ -60,6 +60,7 @@ const RoleFilters = () => {
           key={index}
           name="role"
           value={role}
+          className={filterRole === role && "active"}
           onClick={e => {
             setFilterRole(e.currentTarget.value);
           }}

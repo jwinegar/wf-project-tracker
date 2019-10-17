@@ -5,7 +5,6 @@ import styled from "styled-components/macro";
 
 import { FiltersContext } from "../globalState";
 
-import ProjectFilters from "./ProjectFilters";
 import Project from "./Project";
 import RoleOverview from "./RoleOverview";
 
@@ -86,7 +85,6 @@ const ProjectsList = () => {
 
   return (
     <>
-      <ProjectFilters totalProjectsCount={data.projects.length} />
       <MainContainer>
         {filterRole ? (
           <RoleOverview

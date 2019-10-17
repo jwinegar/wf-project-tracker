@@ -13,11 +13,7 @@ const Container = styled.article`
     margin-top: 2em;
   }
 `;
-const CalloutContainer = styled.div`
-  /* display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between; */
-`;
+const CalloutContainer = styled.div``;
 const CalloutItem = styled.div`
   display: inline-block;
 

@@ -1,7 +1,13 @@
 import React, { useContext } from "react";
 import { FiltersContext } from "../globalState";
+import styled from "styled-components/macro";
 
-import { Container, Button } from "./globalStyledComponents";
+import { Button } from "./globalStyledComponents";
+
+export const Container = styled.div`
+  width: 100%;
+  padding: 1em 4.2667%;
+`;
 
 const activeFiltersArr = (...filters) => {
   const activeArr = [];
