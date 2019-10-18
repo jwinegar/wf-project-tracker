@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { FiltersContext } from "../globalState";
 
-import { Button } from "./globalStyledComponents";
+import { Button } from "./globalStyles";
 
 const PROGRAMS_QUERY = gql`
   query programsQuery {
@@ -57,7 +57,9 @@ const ProgramFilters = () => {
           value={program}
           className={filterProgram === program && "active"}
           onClick={e => {
-            setFilterProgram(e.currentTarget.value);
+            filterProgram !== program
+              ? setFilterProgram(e.currentTarget.value)
+              : setFilterProgram("");
           }}
         >
           {program}

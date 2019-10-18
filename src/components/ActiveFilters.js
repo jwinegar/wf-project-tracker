@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { FiltersContext } from "../globalState";
 import styled from "styled-components/macro";
 
-import { Button } from "./globalStyledComponents";
+import { Button } from "./globalStyles";
 
 export const Container = styled.div`
   width: 100%;

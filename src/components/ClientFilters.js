@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { FiltersContext } from "../globalState";
 
-import { Button } from "./globalStyledComponents";
+import { Button } from "./globalStyles";
 
 const clientArr = ["HMA", "GMA"];
 
@@ -18,7 +18,9 @@ const ClientFilters = () => {
           value={client}
           className={filterClient === client && "active"}
           onClick={e => {
-            setFilterClient(e.currentTarget.value);
+            filterClient !== client
+              ? setFilterClient(e.currentTarget.value)
+              : setFilterClient("");
           }}
         >
           {client}

@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { FiltersContext } from "../globalState";
 
-import { Button } from "./globalStyledComponents";
+import { Button } from "./globalStyles";
 
 const ROLES_QUERY = gql`
   query rolesQuery {
@@ -62,7 +62,9 @@ const RoleFilters = () => {
           value={role}
           className={filterRole === role && "active"}
           onClick={e => {
-            setFilterRole(e.currentTarget.value);
+            filterRole !== role
+              ? setFilterRole(e.currentTarget.value)
+              : setFilterRole("");
           }}
         >
           {role}
