@@ -4,6 +4,7 @@ import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
 
 import { FiltersContext } from "../globalState";
+import { useStatusDelay } from "../hooks/statusDelay";
 
 import Project from "./Project";
 import RoleOverview from "./RoleOverview";
@@ -44,6 +45,8 @@ const MainContainer = styled.main`
 const ProjectsList = () => {
   const { data, loading, error } = useQuery(PROJECTS_QUERY);
 
+  const loadingLabel = useStatusDelay("Loading Projects...");
+
   const {
     filterClient,
     filterProgram,
@@ -75,7 +78,7 @@ const ProjectsList = () => {
       // sort projects by expiration: closest to furthest
       .sort((a, b) => (a.expireDate > b.expireDate ? 1 : -1));
 
-  if (loading) return <Message>Loading Projects...</Message>;
+  if (loading) return <Message>{loadingLabel}</Message>;
   if (error) return <Message>{error.message}</Message>;
   if (!data || !data.projects) return <Message>No projects found</Message>;
 

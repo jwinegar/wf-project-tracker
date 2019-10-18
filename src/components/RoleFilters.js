@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { FiltersContext } from "../globalState";
+import { useStatusDelay } from "../hooks/statusDelay";
 
 import { Button } from "./globalStyles";
 
@@ -21,11 +22,12 @@ const ROLES_QUERY = gql`
 const RoleFilters = () => {
   const { data, loading, error } = useQuery(ROLES_QUERY);
   const { filterRole, setFilterRole } = useContext(FiltersContext);
+  const loadingLabel = useStatusDelay("Loading...");
 
   if (loading)
     return (
       <span>
-        <small>Loading...</small>
+        <small>{loadingLabel}</small>
       </span>
     );
   if (error)
