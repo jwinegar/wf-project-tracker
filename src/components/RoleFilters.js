@@ -24,24 +24,9 @@ const RoleFilters = () => {
   const { filterRole, setFilterRole } = useContext(FiltersContext);
   const loadingLabel = useStatusDelay("Gathering Roles...");
 
-  if (loading)
-    return (
-      <span>
-        <small>{loadingLabel}</small>
-      </span>
-    );
-  if (error)
-    return (
-      <span>
-        <small>{error.message}</small>
-      </span>
-    );
-  if (!data || !data.projects)
-    return (
-      <span>
-        <small>No roles found</small>
-      </span>
-    );
+  if (loading) return <small>{loadingLabel}</small>;
+  if (error) return <small>{error.message}</small>;
+  if (!data || !data.projects) return <small>No roles found</small>;
 
   const tasks = data.projects
     .map(project => project.tasks.map(task => task.role))

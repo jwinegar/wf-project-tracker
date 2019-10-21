@@ -6,7 +6,7 @@ export const useStatusDelay = props => {
   useEffect(() => {
     const delay = setTimeout(() => {
       setLoading(props);
-    }, 750);
+    }, 1000);
 
     return () => clearTimeout(delay);
   });
