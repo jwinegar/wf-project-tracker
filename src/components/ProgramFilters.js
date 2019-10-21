@@ -17,7 +17,7 @@ const PROGRAMS_QUERY = gql`
 const ProgramFilters = () => {
   const { data, loading, error } = useQuery(PROGRAMS_QUERY);
   const { filterProgram, setFilterProgram } = useContext(FiltersContext);
-  const loadingLabel = useStatusDelay("Loading...");
+  const loadingLabel = useStatusDelay("Gathering Programs...");
 
   if (loading)
     return (

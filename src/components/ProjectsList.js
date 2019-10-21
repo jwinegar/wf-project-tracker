@@ -45,7 +45,7 @@ const MainContainer = styled.main`
 const ProjectsList = () => {
   const { data, loading, error } = useQuery(PROJECTS_QUERY);
 
-  const loadingLabel = useStatusDelay("Loading Projects...");
+  const loadingLabel = useStatusDelay("Retrieving Projects...");
 
   const {
     filterClient,

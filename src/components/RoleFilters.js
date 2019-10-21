@@ -22,7 +22,7 @@ const ROLES_QUERY = gql`
 const RoleFilters = () => {
   const { data, loading, error } = useQuery(ROLES_QUERY);
   const { filterRole, setFilterRole } = useContext(FiltersContext);
-  const loadingLabel = useStatusDelay("Loading...");
+  const loadingLabel = useStatusDelay("Gathering Roles...");
 
   if (loading)
     return (
