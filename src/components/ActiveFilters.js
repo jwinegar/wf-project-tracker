@@ -9,17 +9,8 @@ export const Container = styled.div`
   padding: 1em 4.2667%;
 `;
 
-const activeFiltersArr = (...filters) => {
-  const activeArr = [];
-
-  filters.forEach(filter => {
-    if (!!filter) {
-      filter && activeArr.push(filter);
-    }
-  });
-
-  return activeArr;
-};
+const activeFiltersArr = (...values) =>
+  values.filter(value => value !== null && value !== "" && value);
 
 const ActiveFilters = () => {
   const {
@@ -34,7 +25,7 @@ const ActiveFilters = () => {
     filteredProjectCount
   } = useContext(FiltersContext);
 
-  const resetFilters = () => {
+  const resetAllFilters = () => {
     !!filterProjectName && setFilterProjectName("");
     !!filterClient && setFilterClient("");
     !!filterProgram && setFilterProgram("");
@@ -54,8 +45,8 @@ const ActiveFilters = () => {
                 type="button"
                 name="filter"
                 value=""
-                onClick={e => {
-                  setFilterClient(e.currentTarget.value);
+                onClick={() => {
+                  setFilterClient("");
                 }}
               >
                 {filterClient} &nbsp;&times;
@@ -66,8 +57,8 @@ const ActiveFilters = () => {
                 type="button"
                 name="filter"
                 value=""
-                onClick={e => {
-                  setFilterProgram(e.currentTarget.value);
+                onClick={() => {
+                  setFilterProgram("");
                 }}
               >
                 {filterProgram} &nbsp;&times;
@@ -78,8 +69,8 @@ const ActiveFilters = () => {
                 type="button"
                 name="filter"
                 value=""
-                onClick={e => {
-                  setFilterRole(e.currentTarget.value);
+                onClick={() => {
+                  setFilterRole("");
                 }}
               >
                 {filterRole} &nbsp;&times;
@@ -89,8 +80,8 @@ const ActiveFilters = () => {
               type="button"
               name="filter"
               value=""
-              onClick={e => {
-                resetFilters();
+              onClick={() => {
+                resetAllFilters();
               }}
               style={{ backgroundColor: "transparent", border: "none" }}
             >
