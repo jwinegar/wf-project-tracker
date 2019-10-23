@@ -14,20 +14,21 @@ const FilterCount = () => {
       }
     `
   );
-  const { filteredProjectCount } = useContext(FiltersContext);
+  const [{ filteredCount }] = useContext(FiltersContext);
+
   const loadingLabel = useStatusDelay("Loading...");
 
-  let totalProjectsCount = 0;
+  let totalCount = 0;
 
   if (loading) return <small>{loadingLabel}</small>;
   if (error) return <small>{error.message}</small>;
   if (!data || !data.projects) return <small>No projects found</small>;
 
-  totalProjectsCount = data.projects.length;
+  totalCount = data.projects.length;
 
   return (
     <small>
-      {filteredProjectCount} of {totalProjectsCount} projects showing
+      {filteredCount} of {totalCount} projects showing
     </small>
   );
 };

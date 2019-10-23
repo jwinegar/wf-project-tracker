@@ -44,15 +44,12 @@ const MainContainer = styled.main`
 
 const ProjectsList = () => {
   const { data, loading, error } = useQuery(PROJECTS_QUERY);
-  const loadingLabel = useStatusDelay("Retrieving Projects...");
+  const [
+    { clientFilter, programFilter, roleFilter, searchFilter },
+    dispatch
+  ] = useContext(FiltersContext);
 
-  const {
-    filterClient,
-    filterProgram,
-    filterProjectName,
-    filterRole,
-    setFilteredProjectCount
-  } = useContext(FiltersContext);
+  const loadingLabel = useStatusDelay("Retrieving Projects...");
 
   // get list of projects by role
   const getProjectsByRole = (data, role) =>
@@ -63,14 +60,14 @@ const ProjectsList = () => {
   const filterProjects = projects =>
     projects
       // filter by client
-      .filter(project => project.name.includes(filterClient))
+      .filter(project => project.name.includes(clientFilter))
       // filter by project name
       .filter(project =>
-        project.name.toLowerCase().includes(filterProjectName.toLowerCase())
+        project.name.toLowerCase().includes(searchFilter.toLowerCase())
       )
       // filter by program
       .filter(project =>
-        filterProgram ? project.program.includes(filterProgram) : project
+        programFilter ? project.program.includes(programFilter) : project
       )
       // sort projects by name alphabetically
       .sort((a, b) => (a.name > b.name ? -1 : 1))
@@ -81,19 +78,21 @@ const ProjectsList = () => {
   if (error) return <Message>{error.message}</Message>;
   if (!data || !data.projects) return <Message>No projects found</Message>;
 
-  setFilteredProjectCount(
-    getProjectsByRole(filterProjects(data.projects), filterRole).length
-  );
+  const projCount = getProjectsByRole(filterProjects(data.projects), roleFilter)
+    .length;
+
+  console.log(projCount);
+
+  // dispatch({ type: "UPDATE_FILTEREDCOUNT", payload: projCount });
 
   return (
     <>
       <MainContainer>
-        {filterRole ? (
+        {roleFilter ? (
           <RoleOverview
-            role={filterRole}
             projects={getProjectsByRole(
               filterProjects(data.projects),
-              filterRole
+              roleFilter
             )}
           />
         ) : (

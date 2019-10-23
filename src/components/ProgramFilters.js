@@ -16,7 +16,8 @@ const PROGRAMS_QUERY = gql`
 
 const ProgramFilters = () => {
   const { data, loading, error } = useQuery(PROGRAMS_QUERY);
-  const { filterProgram, setFilterProgram } = useContext(FiltersContext);
+  const [{ programFilter }, dispatch] = useContext(FiltersContext);
+
   const loadingLabel = useStatusDelay("Gathering Programs...");
 
   if (loading) return <small>{loadingLabel}</small>;
@@ -42,11 +43,14 @@ const ProgramFilters = () => {
           key={index}
           name="program"
           value={program}
-          className={filterProgram === program && "active"}
-          onClick={e => {
-            filterProgram !== program
-              ? setFilterProgram(e.currentTarget.value)
-              : setFilterProgram("");
+          className={programFilter === program && "active"}
+          onClick={() => {
+            programFilter !== program
+              ? dispatch({
+                  type: "UPDATE_PROGRAMFILTER",
+                  payload: program
+                })
+              : dispatch({ type: "CLIENT_PROGRAMFILTER" });
           }}
         >
           {program}

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components/macro";
+import { FiltersContext } from "../globalState";
 
 import { setHours, setHrsLabel, setDaysLeft, percentComplete } from "./utils";
 
@@ -139,7 +140,9 @@ const getRoleHoursTotal = (role, dataArr, hrsType) => {
   return totalHours || "0";
 };
 
-const RoleOverview = ({ role, projects }) => {
+const RoleOverview = ({ projects }) => {
+  const [{ roleFilter: role }] = useContext(FiltersContext);
+
   return (
     <Container>
       <header>

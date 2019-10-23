@@ -6,7 +6,7 @@ import { Button } from "./globalStyles";
 const clientArr = ["HMA", "GMA"];
 
 const ClientFilters = () => {
-  const { filterClient, setFilterClient } = useContext(FiltersContext);
+  const [{ clientFilter }, dispatch] = useContext(FiltersContext);
 
   return (
     <span>
@@ -16,11 +16,14 @@ const ClientFilters = () => {
           key={index}
           name="client"
           value={client}
-          className={filterClient === client && "active"}
-          onClick={e => {
-            filterClient !== client
-              ? setFilterClient(e.currentTarget.value)
-              : setFilterClient("");
+          className={clientFilter === client && "active"}
+          onClick={() => {
+            clientFilter !== client
+              ? dispatch({
+                  type: "UPDATE_CLIENTFILTER",
+                  payload: client
+                })
+              : dispatch({ type: "CLEAR_CLIENTFILTER" });
           }}
         >
           {client}

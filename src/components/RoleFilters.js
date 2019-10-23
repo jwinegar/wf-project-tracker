@@ -21,7 +21,8 @@ const ROLES_QUERY = gql`
 
 const RoleFilters = () => {
   const { data, loading, error } = useQuery(ROLES_QUERY);
-  const { filterRole, setFilterRole } = useContext(FiltersContext);
+  const [{ roleFilter }, dispatch] = useContext(FiltersContext);
+
   const loadingLabel = useStatusDelay("Gathering Roles...");
 
   if (loading) return <small>{loadingLabel}</small>;
@@ -47,11 +48,14 @@ const RoleFilters = () => {
           key={index}
           name="role"
           value={role}
-          className={filterRole === role && "active"}
+          className={roleFilter === role && "active"}
           onClick={e => {
-            filterRole !== role
-              ? setFilterRole(e.currentTarget.value)
-              : setFilterRole("");
+            roleFilter !== role
+              ? dispatch({
+                  type: "UPDATE_ROLEFILTER",
+                  payload: role
+                })
+              : dispatch({ type: "CLEAR_ROLEFILTER" });
           }}
         >
           {role}

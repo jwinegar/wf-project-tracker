@@ -13,67 +13,53 @@ const activeFiltersArr = (...values) =>
   values.filter(value => value !== null && value !== "" && value);
 
 const ActiveFilters = () => {
-  const {
-    filterClient,
-    setFilterClient,
-    filterProgram,
-    setFilterProgram,
-    filterProjectName,
-    setFilterProjectName,
-    filterRole,
-    setFilterRole,
-    filteredProjectCount
-  } = useContext(FiltersContext);
-
-  const resetAllFilters = () => {
-    !!filterProjectName && setFilterProjectName("");
-    !!filterClient && setFilterClient("");
-    !!filterProgram && setFilterProgram("");
-    !!filterRole && setFilterRole("");
-  };
+  const [
+    { clientFilter, programFilter, roleFilter, filteredCount },
+    dispatch
+  ] = useContext(FiltersContext);
 
   return (
     <Container>
       <div style={{ height: "1.3496125em", lineHeight: "0.85" }}>
-        {!!activeFiltersArr(filterClient, filterProgram, filterRole).length && (
+        {!!activeFiltersArr(clientFilter, programFilter, roleFilter).length && (
           <>
             <span>
-              <small>Filters ({filteredProjectCount} results):</small>
+              <small>Filters ({filteredCount} results):</small>
             </span>{" "}
-            {!!filterClient && (
+            {!!clientFilter && (
               <Button
                 type="button"
                 name="filter"
                 value=""
                 onClick={() => {
-                  setFilterClient("");
+                  dispatch({ type: "CLEAR_CLIENTFILTER" });
                 }}
               >
-                {filterClient} &nbsp;&times;
+                {clientFilter} &nbsp;&times;
               </Button>
             )}
-            {!!filterProgram && (
+            {!!programFilter && (
               <Button
                 type="button"
                 name="filter"
                 value=""
                 onClick={() => {
-                  setFilterProgram("");
+                  dispatch({ type: "CLEAR_PROGRAMFILTER" });
                 }}
               >
-                {filterProgram} &nbsp;&times;
+                {programFilter} &nbsp;&times;
               </Button>
             )}
-            {!!filterRole && (
+            {!!roleFilter && (
               <Button
                 type="button"
                 name="filter"
                 value=""
                 onClick={() => {
-                  setFilterRole("");
+                  dispatch({ type: "CLEAR_ROLEFILTER" });
                 }}
               >
-                {filterRole} &nbsp;&times;
+                {roleFilter} &nbsp;&times;
               </Button>
             )}
             <Button
@@ -81,7 +67,7 @@ const ActiveFilters = () => {
               name="filter"
               value=""
               onClick={() => {
-                resetAllFilters();
+                dispatch({ type: "CLEAR_FILTERS" });
               }}
               style={{ backgroundColor: "transparent", border: "none" }}
             >

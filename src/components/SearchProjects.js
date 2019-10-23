@@ -54,21 +54,26 @@ const ClearInput = styled.span`
 `;
 
 const SearchProjects = () => {
-  const { filterProjectName, setFilterProjectName } = useContext(
-    FiltersContext
-  );
+  const [{ searchFilter }, dispatch] = useContext(FiltersContext);
 
   return (
     <SearchField>
       <Input
         type="text"
         placeholder="Search Projects"
-        value={filterProjectName}
-        onKeyDown={e => e.keyCode === 27 && setFilterProjectName("")}
-        onChange={e => setFilterProjectName(e.currentTarget.value)}
+        value={searchFilter}
+        onKeyDown={e =>
+          e.keyCode === 27 && dispatch({ type: "CLEAR_SEARCHFILTER" })
+        }
+        onChange={e =>
+          dispatch({
+            type: "UPDATE_SEARCHFILTER",
+            payload: e.currentTarget.value
+          })
+        }
       />
-      {filterProjectName && (
-        <ClearInput onClick={e => setFilterProjectName("")} />
+      {searchFilter && (
+        <ClearInput onClick={() => dispatch({ type: "CLEAR_SEARCHFILTER" })} />
       )}
     </SearchField>
   );
