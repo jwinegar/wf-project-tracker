@@ -4,7 +4,7 @@ import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
 
 import { FiltersContext } from "../globalState";
-import { useStatusDelay } from "../hooks/statusDelay";
+import { useDelayStatus } from "../hooks/delayStatus";
 
 import Project from "./Project";
 import RoleOverview from "./RoleOverview";
@@ -49,7 +49,7 @@ const ProjectsList = () => {
     dispatch
   ] = useContext(FiltersContext);
 
-  const loadingLabel = useStatusDelay("Retrieving Projects...");
+  const loadingLabel = useDelayStatus("Retrieving Projects...");
 
   // get list of projects by role
   const getProjectsByRole = (data, role) =>
@@ -81,13 +81,18 @@ const ProjectsList = () => {
   const projCount = getProjectsByRole(filterProjects(data.projects), roleFilter)
     .length;
 
-  console.log(projCount);
-
-  // dispatch({ type: "UPDATE_FILTEREDCOUNT", payload: projCount });
-
   return (
     <>
       <MainContainer>
+        <small>
+          <button
+            onClick={() => {
+              dispatch({ type: "UPDATE_FILTEREDCOUNT", payload: projCount });
+            }}
+          >
+            test
+          </button>
+        </small>
         {roleFilter ? (
           <RoleOverview
             projects={getProjectsByRole(

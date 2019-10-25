@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export const useStatusDelay = props => {
+export const useDelayStatus = props => {
   const [loading, setLoading] = useState(null);
 
   useEffect(() => {
