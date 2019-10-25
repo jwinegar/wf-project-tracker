@@ -62,6 +62,7 @@ const SearchProjects = () => {
         type="text"
         placeholder="Search Projects"
         value={searchFilter}
+        aria-label="Search Projects"
         onKeyDown={e =>
           e.keyCode === 27 && dispatch({ type: "CLEAR_SEARCHFILTER" })
         }

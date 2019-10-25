@@ -45,8 +45,8 @@ const MainContainer = styled.main`
 const ProjectsList = () => {
   const { data, loading, error } = useQuery(PROJECTS_QUERY);
   const [
-    { clientFilter, programFilter, roleFilter, searchFilter },
-    dispatch
+    { clientFilter, programFilter, roleFilter, searchFilter }
+    // dispatch
   ] = useContext(FiltersContext);
 
   const loadingLabel = useDelayStatus("Retrieving Projects...");
@@ -78,21 +78,11 @@ const ProjectsList = () => {
   if (error) return <Message>{error.message}</Message>;
   if (!data || !data.projects) return <Message>No projects found</Message>;
 
-  const projCount = getProjectsByRole(filterProjects(data.projects), roleFilter)
-    .length;
+  // const projCount = getProjectsByRole(filterProjects(data.projects), roleFilter).length;
 
   return (
     <>
       <MainContainer>
-        <small>
-          <button
-            onClick={() => {
-              dispatch({ type: "UPDATE_FILTEREDCOUNT", payload: projCount });
-            }}
-          >
-            test
-          </button>
-        </small>
         {roleFilter ? (
           <RoleOverview
             projects={getProjectsByRole(
