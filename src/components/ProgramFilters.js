@@ -50,7 +50,7 @@ const ProgramFilters = () => {
                   type: "UPDATE_PROGRAMFILTER",
                   payload: program
                 })
-              : dispatch({ type: "CLIENT_PROGRAMFILTER" });
+              : dispatch({ type: "CLEAR_PROGRAMFILTER" });
           }}
         >
           {program}
