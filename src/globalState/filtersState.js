@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useState } from "react";
 
 export const FiltersContext = createContext();
 
@@ -6,8 +6,7 @@ const initialState = {
   clientFilter: "",
   programFilter: "",
   roleFilter: "",
-  searchFilter: "",
-  filteredCount: 0
+  searchFilter: ""
 };
 
 const reducer = (state, action) => {
@@ -41,9 +40,6 @@ const reducer = (state, action) => {
         searchFilter: ""
       };
 
-    case "UPDATE_FILTEREDCOUNT":
-      return { ...state, filteredCount: action.payload };
-
     default:
       throw new Error("Action type must be defined");
   }
@@ -51,9 +47,12 @@ const reducer = (state, action) => {
 
 export const FiltersProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [filteredCount, setFilteredCount] = useState(0);
 
   return (
-    <FiltersContext.Provider value={[state, dispatch]}>
+    <FiltersContext.Provider
+      value={[{ ...state, filteredCount, setFilteredCount }, dispatch]}
+    >
       {children}
     </FiltersContext.Provider>
   );

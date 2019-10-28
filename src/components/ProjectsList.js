@@ -45,7 +45,7 @@ const MainContainer = styled.main`
 const ProjectsList = () => {
   const { data, loading, error } = useQuery(PROJECTS_QUERY);
   const [
-    { clientFilter, programFilter, roleFilter, searchFilter }
+    { clientFilter, programFilter, roleFilter, searchFilter, setFilteredCount }
     // dispatch
   ] = useContext(FiltersContext);
 
@@ -78,7 +78,9 @@ const ProjectsList = () => {
   if (error) return <Message>{error.message}</Message>;
   if (!data || !data.projects) return <Message>No projects found</Message>;
 
-  // const projCount = getProjectsByRole(filterProjects(data.projects), roleFilter).length;
+  setFilteredCount(
+    getProjectsByRole(filterProjects(data.projects), roleFilter).length
+  );
 
   return (
     <>
