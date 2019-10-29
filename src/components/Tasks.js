@@ -2,65 +2,16 @@ import React from "react";
 import styled from "styled-components/macro";
 
 import { setHours, setHrsLabel, percentComplete } from "./utils";
+import {
+  DataTable,
+  DataTableHeading,
+  DataTableRow,
+  DataTableCell
+} from "./globalStyles";
 
 const Message = styled.div`
   line-height: 0.85;
   margin-top: 0.8125em;
-`;
-const DataTable = styled.table`
-  width: 100%;
-  table-layout: fixed;
-  margin-top: 0.8125em;
-`;
-const DataTableHeading = styled.th`
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  vertical-align: bottom;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-  font-size: 80%;
-  line-height: 1;
-  padding: 10px;
-  background-color: white;
-  border-bottom: solid 1px;
-`;
-const DataTableRow = styled.tr`
-  td {
-    background-color: rgba(0, 0, 0, 0);
-    transition: backgound-color 0.5s;
-  }
-
-  &.alert-error {
-    color: red;
-  }
-  &.alert-accomplished td {
-    color: rgba(0, 0, 0, 0.2);
-  }
-
-  &:hover,
-  &:focus {
-    td {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
-    &.alert-error td {
-      background-color: rgba(255, 0, 0, 0.1);
-    }
-  }
-`;
-const DataTableCell = styled.td`
-  position: relative;
-  vertical-align: top;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  padding: 5px 10px;
-  
-  ${DataTableRow} + ${DataTableRow} > & {
-    border-top: solid 1px rgba(0, 0, 0, 0.1);
-  }
 `;
 
 const Tasks = ({ project }) => {

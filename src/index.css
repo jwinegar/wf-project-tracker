@@ -26,8 +26,8 @@ body {
   font-size: 100%;
   font-weight: normal;
   line-height: 1.625;
-  color: #333333;
-  background-color: rgba(0,0,0,.025);
+  color: #424344;
+  background-color: #f2f3f5;
 }
 
 h1,
@@ -70,7 +70,6 @@ code {
 }
 
 button[class],
-input[class],
 select[class] {
   font-size: 0.6875em;
   line-height: 0.8;

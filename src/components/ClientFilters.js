@@ -9,7 +9,7 @@ const ClientFilters = () => {
   const [{ clientFilter }, dispatch] = useContext(FiltersContext);
 
   return (
-    <span>
+    <div>
       {clientArr.map((client, index) => (
         <Button
           type="button"
@@ -29,7 +29,7 @@ const ClientFilters = () => {
           {client}
         </Button>
       ))}
-    </span>
+    </div>
   );
 };
 

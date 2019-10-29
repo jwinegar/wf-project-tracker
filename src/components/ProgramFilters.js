@@ -36,7 +36,7 @@ const ProgramFilters = () => {
     .sort();
 
   return (
-    <span>
+    <div>
       {programs.map((program, index) => (
         <Button
           type="button"
@@ -56,7 +56,7 @@ const ProgramFilters = () => {
           {program}
         </Button>
       ))}
-    </span>
+    </div>
   );
 };
 

@@ -41,7 +41,7 @@ const RoleFilters = () => {
     .sort();
 
   return (
-    <span>
+    <div>
       {roles.map((role, index) => (
         <Button
           type="button"
@@ -61,7 +61,7 @@ const RoleFilters = () => {
           {role}
         </Button>
       ))}
-    </span>
+    </div>
   );
 };
 
