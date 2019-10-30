@@ -4,22 +4,13 @@ import { FiltersContext } from "../globalState";
 
 import { setHours, setHrsLabel, setDaysLeft, percentComplete } from "./utils";
 import {
+  ListingContainer,
   DataTable,
   DataTableHeading,
   DataTableRow,
   DataTableCell
 } from "./globalStyles";
 
-const Container = styled.article`
-  width: 100%;
-  padding: 1.5em 2em 2em;
-  background-color: white;
-  border-radius: 5px;
-
-  & + & {
-    margin-top: 2em;
-  }
-`;
 const CalloutContainer = styled.div``;
 const CalloutItem = styled.div`
   display: inline-block;
@@ -95,7 +86,7 @@ const RoleOverview = ({ projects }) => {
   const [{ roleFilter: role }] = useContext(FiltersContext);
 
   return (
-    <Container>
+    <ListingContainer>
       <header>
         <h2>
           {role}
@@ -197,7 +188,7 @@ const RoleOverview = ({ projects }) => {
           </tbody>
         </DataTable>
       )}
-    </Container>
+    </ListingContainer>
   );
 };
 

@@ -8,19 +8,19 @@ import ProgramFilters from "./ProgramFilters";
 import RoleFilters from "./RoleFilters";
 import FilterCount from "./FilterCount";
 
-import { color } from "./globalStyles";
+import { color, boxShadow } from "./globalStyles";
 import { ReactComponent as Icon } from "../wf-lion.svg";
 
 const MainHeader = styled.header`
   width: 100%;
   padding: 1.5em 4.2667% 1.25em;
   background-color: white;
-  border-bottom: solid 1px ${color.dkGray};
+  ${boxShadow}
 `;
 const FilterGrid = styled.div`
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-gap: 15px 40px;
+  grid-gap: 10px 40px;
 `;
 const WfLogo = styled.div`
   width: 2rem;

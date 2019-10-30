@@ -1,21 +1,14 @@
 import React from "react";
-import styled from "styled-components/macro";
+import { ListingContainer } from "./globalStyles";
 
 import { setExpiring } from "./utils";
 import Tasks from "./Tasks";
-
-const Container = styled.article`
-  width: 100%;
-  padding: 1.5em 2em 2em;
-  background-color: white;
-  border-radius: 5px;
-`;
 
 const Project = ({ project }) => {
   const { name, program, expireDate } = project;
 
   return (
-    <Container>
+    <ListingContainer>
       <header>
         <p>Program: {program}</p>
         <h2>
@@ -27,7 +20,7 @@ const Project = ({ project }) => {
         </h2>
       </header>
       <Tasks project={project} />
-    </Container>
+    </ListingContainer>
   );
 };
 

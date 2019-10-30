@@ -7,6 +7,8 @@ export const color = {
   mdGray: "#f2f3f5"
 };
 
+export const boxShadow = `box-shadow: 0px 3px 8px -3px ${color.dkGray}`;
+
 export const Button = styled.button`
   cursor: pointer;
   color: #5a5e61;
@@ -32,6 +34,14 @@ export const Button = styled.button`
   &:not(:last-child) {
     margin-right: 5px;
   }
+`;
+
+export const ListingContainer = styled.article`
+  width: 100%;
+  padding: 1.5em 2em 2em;
+  background-color: white;
+  border-radius: 5px;
+  ${boxShadow}
 `;
 
 export const DataTable = styled.table`
