@@ -4,7 +4,8 @@ export const color = {
   primary: "#424346", // Black
   accent: "#007bc5", // Blue
   dkGray: "#d9dce1",
-  mdGray: "#f2f3f5"
+  mdGray: "#f2f3f5",
+  ltGray: "#f7f7f9"
 };
 
 export const boxShadow = `box-shadow: 0px 3px 8px -3px ${color.dkGray}`;
@@ -22,7 +23,7 @@ export const Button = styled.button`
   &:focus {
     color: currentColor;
     border-color: #a8abaf;
-    background-color: #f7f7f9;
+    background-color: ${color.ltGray};
   }
 
   &.active {
@@ -80,7 +81,7 @@ export const DataTableRow = styled.tr`
   &:hover,
   &:focus {
     td {
-      background-color: ${color.mdGray};
+      background-color: ${color.ltGray};
     }
     &.alert-error td {
       background-color: rgba(255, 0, 0, 0.1);
