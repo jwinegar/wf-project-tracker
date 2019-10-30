@@ -27,8 +27,8 @@ export const Button = styled.button`
 
   &.active {
     color: white;
-    border-color: ${color.accent};
-    background-color: ${color.accent};
+    border-color: ${color.primary};
+    background-color: ${color.primary};
   }
 
   &:not(:last-child) {
