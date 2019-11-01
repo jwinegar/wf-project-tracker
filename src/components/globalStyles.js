@@ -15,7 +15,7 @@ export const Button = styled.button`
   color: #5a5e61;
   border: solid 1px ${color.dkGray};
   border-radius: 5px;
-  padding: 0.5em 0.65em 0.65em;
+  padding: 0.55em 0.75em 0.6em;
   background-color: white;
   transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 
