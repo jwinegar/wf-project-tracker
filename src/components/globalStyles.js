@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 
 export const color = {
   primary: "#424346", // Black
-  accent: "#007bc5", // Blue
+  accent: "#0a47ed", // Blue
   dkGray: "#d9dce1",
   mdGray: "#f2f3f5",
   ltGray: "#f7f7f9"

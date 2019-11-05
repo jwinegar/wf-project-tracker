@@ -4,7 +4,7 @@ import { gql } from "apollo-boost";
 import styled from "styled-components/macro";
 
 import { FiltersContext } from "../globalState";
-import { useDelayStatus } from "../hooks/delayStatus";
+import useDelayStatus from "../hooks/useDelayStatus";
 
 import Project from "./Project";
 import RoleOverview from "./RoleOverview";

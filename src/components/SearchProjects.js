@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import { FiltersContext } from "../globalState";
+import useDebounce from "../hooks/useDebounce";
 
 import { color } from "./globalStyles";
 
@@ -75,26 +76,41 @@ const ClearInput = styled.span`
 
 const SearchProjects = () => {
   const [{ searchFilter }, dispatch] = useContext(FiltersContext);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 250);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      dispatch({
+        type: "UPDATE_SEARCHFILTER",
+        payload: debouncedSearchTerm
+      });
+    } else {
+      dispatch({ type: "CLEAR_SEARCHFILTER" });
+    }
+  }, [debouncedSearchTerm, dispatch]);
 
   return (
     <SearchField>
       <Input
         type="text"
         placeholder="Search Projects"
-        value={searchFilter}
+        value={searchTerm}
         aria-label="Search Projects"
         onKeyDown={e =>
-          e.keyCode === 27 && dispatch({ type: "CLEAR_SEARCHFILTER" })
+          e.keyCode === 27 &&
+          (dispatch({ type: "CLEAR_SEARCHFILTER" }), setSearchTerm(""))
         }
-        onChange={e =>
-          dispatch({
-            type: "UPDATE_SEARCHFILTER",
-            payload: e.currentTarget.value
-          })
-        }
+        onChange={e => setSearchTerm(e.currentTarget.value)}
       />
       {searchFilter && (
-        <ClearInput onClick={() => dispatch({ type: "CLEAR_SEARCHFILTER" })} />
+        <ClearInput
+          onClick={() => {
+            dispatch({ type: "CLEAR_SEARCHFILTER" });
+            setSearchTerm("");
+          }}
+        />
       )}
     </SearchField>
   );

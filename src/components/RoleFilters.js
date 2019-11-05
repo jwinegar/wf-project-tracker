@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { FiltersContext } from "../globalState";
-import { useDelayStatus } from "../hooks/delayStatus";
+import useDelayStatus from "../hooks/useDelayStatus";
 
 import { Button } from "./globalStyles";
 

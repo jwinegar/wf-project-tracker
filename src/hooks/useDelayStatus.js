@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export const useDelayStatus = props => {
+const useDelayStatus = props => {
   const [loading, setLoading] = useState(null);
 
   useEffect(() => {
@@ -13,3 +13,5 @@ export const useDelayStatus = props => {
 
   return loading;
 };
+
+export default useDelayStatus;
