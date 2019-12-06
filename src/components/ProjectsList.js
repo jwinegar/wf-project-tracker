@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
+import { useQuery } from "@apollo/react-hooks";
 import styled from "styled-components/macro";
 
 import { FiltersContext } from "../globalState";
@@ -9,7 +9,7 @@ import useDelayStatus from "../hooks/useDelayStatus";
 import Project from "./Project";
 import RoleOverview from "./RoleOverview";
 
-const PROJECTS_QUERY = gql`
+export const PROJECTS_QUERY = gql`
   query projectsQuery {
     projects {
       id
@@ -43,7 +43,7 @@ const MainContainer = styled.main`
 `;
 
 const ProjectsList = () => {
-  const { data, loading, error } = useQuery(PROJECTS_QUERY);
+  const { loading, error, data } = useQuery(PROJECTS_QUERY);
   const [
     { clientFilter, programFilter, roleFilter, searchFilter, setFilteredCount }
     // dispatch
