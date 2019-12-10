@@ -78,7 +78,7 @@ const ClearInput = styled.span`
 
 const SearchProjects = () => {
   const [{ searchFilter }, dispatch] = useContext(FiltersContext);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchFilter);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 250);
 
@@ -106,7 +106,7 @@ const SearchProjects = () => {
         }
         onChange={e => setSearchTerm(e.currentTarget.value)}
       />
-      {searchFilter && (
+      {searchTerm && (
         <ClearInput
           onClick={() => {
             dispatch({ type: "CLEAR_SEARCHFILTER" });

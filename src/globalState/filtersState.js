@@ -36,8 +36,7 @@ const reducer = (state, action) => {
         ...state,
         clientFilter: "",
         programFilter: "",
-        roleFilter: "",
-        searchFilter: ""
+        roleFilter: ""
       };
 
     default:
