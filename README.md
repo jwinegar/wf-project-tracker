@@ -1,12 +1,11 @@
 # WF Project Tracker
 
-    
-
 WF Project Tracker is a web app designed to clearly show a listing of specific
 client projects using the Workfront API. Projects can be filtered by project
 name search, client breakdown, program, and role.
 
-Features include:   
+Features include:
+
 - Hours scoped vs. hours logged per assigned role in each project
 - Remainder hours difference and percentage of hours used per role to better
   track hours as employees log time
