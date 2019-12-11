@@ -2,7 +2,8 @@
 
 WF Project Tracker is a web app designed to clearly show a listing of specific
 client projects using the Workfront API. Projects can be filtered by project
-name search, client breakdown, program, and role.
+name search, client breakdown, program, and role. All filters can be used in 
+conjunction with each other to refine listing.
 
 Features include:
 
@@ -12,5 +13,6 @@ Features include:
 - Flags when logged hours have met (displays gray) or exceeded (displays red)
   scoped hours
 - Number of days left before project expires
-- When role filter is selected, changes project list to show all projects
-  assigned to the selected role
+- When using the role filter, changes display to show all projects assigned to 
+  a selected role with additional display of total scoped hours, total logged 
+  hours, and total percent complete for that role
