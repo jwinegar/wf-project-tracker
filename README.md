@@ -1,6 +1,6 @@
 # WF Project Tracker
 
-
+    
 
 WF Project Tracker is a web app designed to clearly show a listing of specific
 client projects using the Workfront API. Projects can be filtered by project
