@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/react-hooks";
 import styled from "styled-components/macro";
 
 import { FiltersContext } from "../globalState";
-import useDelayStatus from "../hooks/useDelayStatus";
+import useDebounce from "../hooks/useDebounce";
 
 import Project from "./Project";
 import RoleOverview from "./RoleOverview";
@@ -49,7 +49,7 @@ const ProjectsList = () => {
     // dispatch
   ] = useContext(FiltersContext);
 
-  const loadingLabel = useDelayStatus("Retrieving Projects...");
+  const loadingLabel = useDebounce("Retrieving Projects...", 1000);
 
   // get list of projects by role
   const getProjectsByRole = (data, role) =>
