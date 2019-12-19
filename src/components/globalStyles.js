@@ -48,6 +48,7 @@ export const ListingContainer = styled.article`
 export const DataTable = styled.table`
   width: 100%;
   table-layout: fixed;
+  cursor: default;
   margin-top: 0.8125em;
 `;
 export const DataTableHeading = styled.th`

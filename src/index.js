@@ -1,4 +1,4 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
@@ -12,11 +12,13 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <ContextProvider>
-      <App />
-    </ContextProvider>
-  </ApolloProvider>,
+  <StrictMode>
+    <ApolloProvider client={client}>
+      <ContextProvider>
+        <App />
+      </ContextProvider>
+    </ApolloProvider>
+  </StrictMode>,
   document.getElementById("root")
 );
 
