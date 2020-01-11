@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { FiltersContext } from "../globalState";
-import useDebounce from "../hooks/useDebounce";
+import useDelayOutput from "../hooks/useDelayOutput";
 
 const FilterCount = () => {
   const { data, loading, error } = useQuery(
@@ -16,7 +16,7 @@ const FilterCount = () => {
   );
   const [{ filteredCount }] = useContext(FiltersContext);
 
-  const loadingLabel = useDebounce("Loading...", 1000);
+  const loadingLabel = useDelayOutput("Loading...", 1000);
 
   let totalCount = 0;
 

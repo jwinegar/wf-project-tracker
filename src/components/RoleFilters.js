@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { FiltersContext } from "../globalState";
-import useDebounce from "../hooks/useDebounce";
+import useDelayOutput from "../hooks/useDelayOutput";
 
 import { Button } from "./globalStyles";
 
@@ -23,11 +23,12 @@ const RoleFilters = () => {
   const { data, loading, error } = useQuery(ROLES_QUERY);
   const [{ roleFilter }, dispatch] = useContext(FiltersContext);
 
-  const loadingLabel = useDebounce("Gathering Roles...", 1000);
+  const loadingLabel = useDelayOutput("Gathering Roles...", 1000);
 
   if (loading) return <small>{loadingLabel}</small>;
   if (error) return <small>{error.message}</small>;
-  if (!data || !data.projects) return <small>No roles found</small>;
+  if (!data || !data.projects || data.projects.length === 0)
+    return <small>--</small>;
 
   const tasks = data.projects
     .map(project => project.tasks.map(task => task.role))

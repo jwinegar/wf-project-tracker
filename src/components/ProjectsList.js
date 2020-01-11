@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/react-hooks";
 import styled from "styled-components/macro";
 
 import { FiltersContext } from "../globalState";
-import useDebounce from "../hooks/useDebounce";
+import useDelayOutput from "../hooks/useDelayOutput";
 
 import Project from "./Project";
 import RoleOverview from "./RoleOverview";
@@ -49,7 +49,7 @@ const ProjectsList = () => {
     // dispatch
   ] = useContext(FiltersContext);
 
-  const loadingLabel = useDebounce("Retrieving Projects...", 1000);
+  const loadingLabel = useDelayOutput("Retrieving Projects...", 1000);
 
   // get list of projects by role
   const getProjectsByRole = (data, role) =>
@@ -76,7 +76,8 @@ const ProjectsList = () => {
 
   if (loading) return <Message>{loadingLabel}</Message>;
   if (error) return <Message>{error.message}</Message>;
-  if (!data || !data.projects) return <Message>No projects found</Message>;
+  if (!data || !data.projects || data.projects.length === 0)
+    return <Message>No projects found</Message>;
 
   setFilteredCount(
     getProjectsByRole(filterProjects(data.projects), roleFilter).length

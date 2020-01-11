@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { FiltersContext } from "../globalState";
-import useDebounce from "../hooks/useDebounce";
+import useDelayOutput from "../hooks/useDelayOutput";
 
 import { Button } from "./globalStyles";
 
@@ -15,14 +15,15 @@ const PROGRAMS_QUERY = gql`
 `;
 
 const ProgramFilters = () => {
-  const { data, loading, error } = useQuery(PROGRAMS_QUERY);
+  const { loading, error, data } = useQuery(PROGRAMS_QUERY);
   const [{ programFilter }, dispatch] = useContext(FiltersContext);
 
-  const loadingLabel = useDebounce("Gathering Programs...", 1000);
+  const loadingLabel = useDelayOutput("Gathering Programs...", 1000);
 
   if (loading) return <small>{loadingLabel}</small>;
   if (error) return <small>{error.message}</small>;
-  if (!data || !data.projects) return <small>No programs found</small>;
+  if (!data || !data.projects || data.projects.length === 0)
+    return <small>--</small>;
 
   const programs = data.projects
     .filter(project => project.program)

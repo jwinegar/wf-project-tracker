@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useState } from "react";
 
-export const FiltersContext = createContext();
+export const FiltersContext = createContext([{}, function() {}]);
 
 const initialState = {
   clientFilter: "",
