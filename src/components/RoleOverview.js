@@ -26,7 +26,7 @@ const Message = styled.div`
 
 const getRoleHours = (role, data) => {
   const { tasks, hours } = data;
-  const task = tasks.filter(task => task.role.includes(role));
+  const task = tasks.filter(task => task && task.role.includes(role));
 
   const roleObj = [
     ...task

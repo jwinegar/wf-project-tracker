@@ -31,10 +31,10 @@ const RoleFilters = () => {
     return <small>--</small>;
 
   const tasks = data.projects
-    .map(project => project.tasks.map(task => task.role))
+    .map(project => project.tasks.filter(task => task).map(task => task.role))
     .flat();
   const hours = data.projects
-    .map(project => project.hours.map(hour => hour.role))
+    .map(project => project.hours.filter(hour => hour).map(hour => hour.role))
     .flat();
 
   const roles = [...tasks, ...hours]

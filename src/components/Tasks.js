@@ -21,6 +21,7 @@ const Tasks = ({ project }) => {
     return [
       ...tasks
         .concat(hours)
+        .filter(item => item)
         .reduce(
           (m, o) => m.set(o.roleID, Object.assign(m.get(o.roleID) || {}, o)),
           new Map()

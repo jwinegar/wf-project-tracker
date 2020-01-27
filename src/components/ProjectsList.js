@@ -54,7 +54,9 @@ const ProjectsList = () => {
   // get list of projects by role
   const getProjectsByRole = (data, role) =>
     role
-      ? data.filter(project => project.tasks.some(task => task.role === role))
+      ? data.filter(project =>
+          project.tasks.filter(task => task).some(task => task.role === role)
+        )
       : data;
 
   const filterProjects = projects =>
