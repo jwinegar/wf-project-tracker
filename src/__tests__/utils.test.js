@@ -10,9 +10,12 @@ it("Outputs percent value with % label", () => {
 
   percent = percentComplete(50, 150);
   expect(percent).toBe("33.3%");
+
+  percent = percentComplete(0, 0);
+  expect(percent).toBe("0%");
 });
 
-it("Outputs label that is plural or singular based on hours", () => {
+it("Outputs label that is plural or singular based on hours value", () => {
   let hour = setHrsLabel(1);
   expect(hour).toBe("hr");
 

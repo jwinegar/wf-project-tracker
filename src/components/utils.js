@@ -32,9 +32,9 @@ export const setExpiring = expireDate => {
 };
 
 export const percentComplete = (val, total) =>
-  `${Math.round((val / total) * 100 * 10) / 10}%`;
+  `${Math.round((val / total) * 100 * 10) / 10 || 0}%`;
 
-export const setHours = hours => (hours ? hours : 0);
+export const setHours = hours => hours || 0;
 
 export const setHrsLabel = hours =>
   hours === 1 || hours === -1 ? "hr" : "hrs";
