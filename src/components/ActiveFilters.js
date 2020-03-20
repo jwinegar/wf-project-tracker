@@ -18,6 +18,21 @@ const ActiveFilters = () => {
     dispatch
   ] = useContext(FiltersContext);
 
+  const filtersArr = [
+    {
+      filter: clientFilter,
+      dispatchType: "CLEAR_CLIENTFILTER"
+    },
+    {
+      filter: programFilter,
+      dispatchType: "CLEAR_PROGRAMFILTER"
+    },
+    {
+      filter: roleFilter,
+      dispatchType: "CLEAR_ROLEFILTER"
+    }
+  ];
+
   return (
     <Container>
       <div style={{ height: "1.3496125em", lineHeight: "0.85" }}>
@@ -26,41 +41,21 @@ const ActiveFilters = () => {
             <span>
               <small>Filters ({filteredCount} results):</small>
             </span>{" "}
-            {!!clientFilter && (
-              <Button
-                type="button"
-                name="filter"
-                value=""
-                onClick={() => {
-                  dispatch({ type: "CLEAR_CLIENTFILTER" });
-                }}
-              >
-                {clientFilter} &nbsp;&times;
-              </Button>
-            )}
-            {!!programFilter && (
-              <Button
-                type="button"
-                name="filter"
-                value=""
-                onClick={() => {
-                  dispatch({ type: "CLEAR_PROGRAMFILTER" });
-                }}
-              >
-                {programFilter} &nbsp;&times;
-              </Button>
-            )}
-            {!!roleFilter && (
-              <Button
-                type="button"
-                name="filter"
-                value=""
-                onClick={() => {
-                  dispatch({ type: "CLEAR_ROLEFILTER" });
-                }}
-              >
-                {roleFilter} &nbsp;&times;
-              </Button>
+            {filtersArr.map(
+              (filter, index) =>
+                !!filter.filter && (
+                  <Button
+                    key={index}
+                    type="button"
+                    name="filter"
+                    value=""
+                    onClick={() => {
+                      dispatch({ type: filter.dispatchType });
+                    }}
+                  >
+                    {filter.filter} &nbsp;&times;
+                  </Button>
+                )
             )}
             <Button
               type="button"
