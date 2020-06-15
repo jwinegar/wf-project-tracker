@@ -42,33 +42,32 @@ const MainContainer = styled.main`
   }
 `;
 
+// get list of projects by role
+const getProjectsByRole = (data, role) =>
+  role
+    ? data.filter((project) =>
+        project.tasks.filter((task) => task).some((task) => task.role === role)
+      )
+    : data;
+
 const ProjectsList = () => {
   const { loading, error, data } = useQuery(PROJECTS_QUERY);
   const [
-    { clientFilter, programFilter, roleFilter, searchFilter, setFilteredCount }
-    // dispatch
+    { clientFilter, programFilter, roleFilter, searchFilter, setFilteredCount },
   ] = useContext(FiltersContext);
 
   const loadingLabel = useDelayOutput("Retrieving Projects...", 1000);
 
-  // get list of projects by role
-  const getProjectsByRole = (data, role) =>
-    role
-      ? data.filter(project =>
-          project.tasks.filter(task => task).some(task => task.role === role)
-        )
-      : data;
-
-  const filterProjects = projects =>
+  const filterProjects = (projects) =>
     projects
       // filter by client
-      .filter(project => project.name.includes(clientFilter))
+      .filter((project) => project.name.includes(clientFilter))
       // filter by project name
-      .filter(project =>
+      .filter((project) =>
         project.name.toLowerCase().includes(searchFilter.toLowerCase())
       )
       // filter by program
-      .filter(project =>
+      .filter((project) =>
         programFilter ? project.program.includes(programFilter) : project
       )
       // sort projects by name alphabetically
@@ -81,6 +80,8 @@ const ProjectsList = () => {
   if (!data || !data.projects || data.projects.length === 0)
     return <Message>No projects found</Message>;
 
+  // TODO: Fix how this is set.
+  // Warning: Cannot update a component from inside the function body of a different component.
   setFilteredCount(
     getProjectsByRole(filterProjects(data.projects), roleFilter).length
   );
@@ -96,7 +97,7 @@ const ProjectsList = () => {
             )}
           />
         ) : (
-          filterProjects(data.projects).map(project => (
+          filterProjects(data.projects).map((project) => (
             <Project key={project.id} project={project} />
           ))
         )}

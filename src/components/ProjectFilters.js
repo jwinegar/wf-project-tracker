@@ -51,7 +51,7 @@ const ProjectFilters = () => (
           display: "flex",
           flexFlow: "row nowrap",
           justifyContent: "space-between",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <SearchProjects />

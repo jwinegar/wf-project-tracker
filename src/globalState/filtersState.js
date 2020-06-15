@@ -1,12 +1,12 @@
 import React, { createContext, useReducer, useState } from "react";
 
-export const FiltersContext = createContext([{}, function() {}]);
+export const FiltersContext = createContext([{}, function () {}]);
 
 const initialState = {
   clientFilter: "",
   programFilter: "",
   roleFilter: "",
-  searchFilter: ""
+  searchFilter: "",
 };
 
 const reducer = (state, action) => {
@@ -37,7 +37,7 @@ const reducer = (state, action) => {
         clientFilter: "",
         programFilter: "",
         roleFilter: "",
-        searchFilter: ""
+        searchFilter: "",
       };
 
     default:

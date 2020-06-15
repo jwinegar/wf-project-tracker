@@ -30,11 +30,17 @@ const RoleFilters = () => {
   if (!data || !data.projects || data.projects.length === 0)
     return <small>--</small>;
 
+  console.log(data);
+
   const tasks = data.projects
-    .map(project => project.tasks.filter(task => task).map(task => task.role))
+    .map((project) =>
+      project.tasks.filter((task) => task).map((task) => task.role)
+    )
     .flat();
   const hours = data.projects
-    .map(project => project.hours.filter(hour => hour).map(hour => hour.role))
+    .map((project) =>
+      project.hours.filter((hour) => hour).map((hour) => hour.role)
+    )
     .flat();
 
   const roles = [...tasks, ...hours]
@@ -50,11 +56,11 @@ const RoleFilters = () => {
           name="role"
           value={role}
           className={roleFilter === role && "active"}
-          onClick={e => {
+          onClick={(e) => {
             roleFilter !== role
               ? dispatch({
                   type: "UPDATE_ROLEFILTER",
-                  payload: role
+                  payload: role,
                 })
               : dispatch({ type: "CLEAR_ROLEFILTER" });
           }}
